@@ -12,7 +12,7 @@ export const config = cleanEnv(process.env, {
     default: "debug",
   }),
   SERVICE_NAME: str({ default: "intmax2-withdrawal-aggregator" }),
-  SERVICE_VERSION: str({ default: "v1.1.0" }),
+  SERVICE_VERSION: str({ default: "v0.0.0" }),
   // db
   EVENT_DATABASE_URL: str(),
   WITHDRAWAL_DATABASE_URL: str(),

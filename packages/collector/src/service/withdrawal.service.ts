@@ -2,6 +2,7 @@ import {
   QueueManager,
   RequestingWithdrawal,
   WithdrawalGroupStatus,
+  WithdrawalPrisma,
   WithdrawalStatus,
   logger,
   withdrawalManager,
@@ -22,7 +23,7 @@ export const fetchRequestingWithdrawals = async () => {
       },
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: WithdrawalPrisma.SortOrder.desc,
     },
   });
 

@@ -1,0 +1,108 @@
+import {
+  getRandomString,
+  getWalletClient,
+  logger,
+  uint8ArrayToString,
+} from "@intmax2-withdrawal-aggregator/shared";
+import { DEFAULT_ID_LENGTH } from "../constants";
+import { pollGnarkProof, pollWithdrawalProof, pollWithdrawalWrapperProof } from "../lib/poll";
+import { createGnarkProof, createWithdrawalProof, createWrappedProof } from "../lib/zkp";
+import type { GnarkProof, WithdrawalWithProof } from "../types";
+
+export const generateWithdrawalProofs = async (withdrawals: WithdrawalWithProof[]) => {
+  const withdrawalProofs: string[] = [];
+
+  for (const [index, withdrawal] of withdrawals.entries()) {
+    const { uuid, singleWithdrawalProof } = withdrawal;
+
+    if (!singleWithdrawalProof) {
+      throw new Error(`Missing single withdrawal proof for withdrawal ${uuid}`);
+    }
+
+    logger.info(`Generating proof for withdrawal ${index + 1}/${withdrawals.length}`, { uuid });
+
+    try {
+      const prevWithdrawalProof = index > 0 ? withdrawalProofs[index - 1] : null;
+      await createWithdrawalProof(
+        uuid,
+        uint8ArrayToString(singleWithdrawalProof),
+        prevWithdrawalProof,
+      );
+
+      const result = await pollWithdrawalProof(uuid);
+      if (!result.proof) {
+        throw new Error(`Failed to generate proof for withdrawal ${uuid}`);
+      }
+
+      withdrawalProofs.push(result.proof);
+
+      logger.debug(`Successfully generated proof for withdrawal ${uuid}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      logger.error(`Failed to generate proof for withdrawal ${uuid} - ${message}`);
+      throw error;
+    }
+  }
+
+  return withdrawalProofs;
+};
+
+export const generateWrappedProof = async (
+  walletClientData: ReturnType<typeof getWalletClient>,
+  withdrawalProofs: string[],
+) => {
+  if (withdrawalProofs.length === 0) {
+    throw new Error("No withdrawal proofs available to generate Wrapped proof");
+  }
+
+  const lastWithdrawalProof = withdrawalProofs[withdrawalProofs.length - 1];
+  const wrapperId = getRandomString(DEFAULT_ID_LENGTH);
+
+  try {
+    logger.info("Generating wrapped proof", { wrapperId });
+
+    await createWrappedProof(wrapperId, walletClientData.account.address, lastWithdrawalProof);
+
+    const wrappedResult = await pollWithdrawalWrapperProof(wrapperId, {
+      maxAttempts: 30,
+      intervalMs: 10_000,
+    });
+    if (!wrappedResult.proof) {
+      throw new Error("Failed to generate wrapper proof");
+    }
+
+    logger.debug(`Successfully generated wrapped proof ${wrapperId}`);
+    return wrappedResult.proof;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    logger.error(`Failed to generate wrapped proof ${wrapperId} - ${message}`);
+    throw error;
+  }
+};
+
+export const generateGnarkProof = async (wrappedProof: string) => {
+  let jobId: string;
+  try {
+    const createGnarkResult = await createGnarkProof(wrappedProof);
+    if (!createGnarkResult.jobId) {
+      throw new Error("Failed to create Gnark proof job");
+    }
+    jobId = createGnarkResult.jobId;
+
+    const gnarkResult = await pollGnarkProof(jobId, {
+      maxAttempts: 30,
+      intervalMs: 10_000,
+    });
+
+    if (!gnarkResult.proof) {
+      throw new Error("Failed to generate Gnark proof");
+    }
+
+    logger.debug(`Successfully generated gnark proof`);
+    return gnarkResult.proof as unknown as GnarkProof;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    logger.error(`Failed to generate gnark proof - ${message}`);
+    throw error;
+  }
+};

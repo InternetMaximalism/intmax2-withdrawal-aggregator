@@ -41,7 +41,6 @@ enum WithdrawalStatus {
   success
   need_claim
   failed
-  submitted
 
   @@map("withdrawal_status")
 }

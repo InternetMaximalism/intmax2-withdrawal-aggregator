@@ -24,7 +24,7 @@ export const performJob = async (data: QueueJobData): Promise<void> => {
     }
 
     // TODO: filter group processing, once withdrawal group is processing, skip
-
+    // TODO: retry if failed
     await withdrawalManager.updateGroup(groupId, {
       status: WithdrawalGroupStatus.PROCESSING,
     });
@@ -38,7 +38,7 @@ export const performJob = async (data: QueueJobData): Promise<void> => {
         },
       },
       data: {
-        status: WithdrawalStatus.submitted,
+        status: WithdrawalStatus.relayed,
       },
     });
   } catch (error) {

@@ -66,7 +66,7 @@ const batchUpdateWithdrawalStatus = (
       withdrawalHash: {
         in: withdrawalEventLogs.map(({ withdrawalHash }) => withdrawalHash),
       },
-      status: WithdrawalStatus.submitted,
+      status: WithdrawalStatus.relayed,
     },
     data: {
       status,

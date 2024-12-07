@@ -1,4 +1,4 @@
-import type { Abi, Account, PublicClient } from "viem";
+import type { Abi, Account } from "viem";
 
 export interface ContractCallParameters {
   contractAddress: `0x${string}`;
@@ -19,12 +19,6 @@ export interface RetryOptions {
   nonce?: number | null;
   maxFeePerGas: bigint | null;
   maxPriorityFeePerGas: bigint | null;
-}
-
-export interface GetTotalFeeParams {
-  ethereumClient: PublicClient;
-  contractCallParams: ContractCallParameters;
-  multiplier: number;
 }
 
 export interface GasPriceData {

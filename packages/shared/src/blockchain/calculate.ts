@@ -1,68 +1,7 @@
-import { type Chain, type PublicClient } from "viem";
-import { estimateContractGas } from "viem/actions";
-import { estimateContractL1Fee } from "viem/op-stack";
-import type { ContractCallParameters, GasPriceData, GetTotalFeeParams } from "../types";
+import type { PublicClient } from "viem";
+import type { GasPriceData } from "../types";
 
 const PRECISION = 10n;
-
-export const getTotalFee = async ({
-  ethereumClient,
-  contractCallParams,
-  multiplier,
-}: GetTotalFeeParams) => {
-  const [l1Fee, l2Gas, gasPriceData] = await Promise.all([
-    getL1Fee(ethereumClient, contractCallParams),
-    getL2Gas(ethereumClient, contractCallParams),
-    getL2GasPrice(ethereumClient),
-  ]);
-
-  const { maxFeePerGas, maxPriorityFeePerGas, l2GasPrice } = calculateAdjustedGasPrices(
-    multiplier,
-    gasPriceData,
-  );
-
-  const totalFee = l1Fee + l2Gas * l2GasPrice;
-
-  return {
-    totalFee,
-    maxFeePerGas,
-    maxPriorityFeePerGas,
-  };
-};
-
-const getL1Fee = async (
-  publicClient: PublicClient,
-  { contractAddress, ...rest }: ContractCallParameters,
-) => {
-  const l1Fee = await estimateContractL1Fee(publicClient, {
-    chain: publicClient.chain as Chain & null,
-    address: contractAddress,
-    ...rest,
-  });
-
-  return l1Fee;
-};
-
-export const getL2Gas = async (
-  publicClient: PublicClient,
-  { contractAddress, ...rest }: ContractCallParameters,
-) => {
-  const l2Gas = await estimateContractGas(publicClient, {
-    address: contractAddress,
-    ...rest,
-  });
-
-  return l2Gas;
-};
-
-const getL2GasPrice = async (publicClient: PublicClient) => {
-  const { maxFeePerGas, maxPriorityFeePerGas } = await publicClient.estimateFeesPerGas();
-
-  return {
-    maxFeePerGas,
-    maxPriorityFeePerGas,
-  };
-};
 
 const calculateAdjustedGasPrices = (multiplier: number, gasPriceData: GasPriceData) => {
   const multiplierScaled = BigInt(Math.round(multiplier * Number(PRECISION)));

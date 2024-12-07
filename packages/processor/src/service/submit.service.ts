@@ -125,8 +125,8 @@ export const submitWithdrawalProofWithRetry = async (
 
   const contractCallOptions: ContractCallOptions = {
     nonce: currentNonce,
-    // maxFeePerGas,
-    // maxPriorityFeePerGas,
+    maxFeePerGas,
+    maxPriorityFeePerGas,
   };
 
   if (pendingNonce > currentNonce) {

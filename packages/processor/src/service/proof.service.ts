@@ -1,8 +1,8 @@
 import {
+  bytesToBase64,
   getRandomString,
   getWalletClient,
   logger,
-  bytesToBase64,
 } from "@intmax2-withdrawal-aggregator/shared";
 import { DEFAULT_ID_LENGTH } from "../constants";
 import { pollGnarkProof, pollWithdrawalProof, pollWithdrawalWrapperProof } from "../lib/poll";

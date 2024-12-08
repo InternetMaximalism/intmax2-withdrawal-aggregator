@@ -16,9 +16,7 @@ export interface RequestingWithdrawal {
 
 export interface ContractWithdrawal {
   recipient: string;
-  token_index: number;
+  tokenIndex: number;
   amount: string;
   nullifier: string;
-  block_hash: string;
-  block_number: number;
 }

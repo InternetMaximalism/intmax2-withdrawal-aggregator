@@ -2,7 +2,7 @@ import {
   getRandomString,
   getWalletClient,
   logger,
-  uint8ArrayToString,
+  bytesToBase64,
 } from "@intmax2-withdrawal-aggregator/shared";
 import { DEFAULT_ID_LENGTH } from "../constants";
 import { pollGnarkProof, pollWithdrawalProof, pollWithdrawalWrapperProof } from "../lib/poll";
@@ -23,11 +23,7 @@ export const generateWithdrawalProofs = async (withdrawals: WithdrawalWithProof[
 
     try {
       const prevWithdrawalProof = index > 0 ? withdrawalProofs[index - 1] : null;
-      await createWithdrawalProof(
-        uuid,
-        uint8ArrayToString(singleWithdrawalProof),
-        prevWithdrawalProof,
-      );
+      await createWithdrawalProof(uuid, bytesToBase64(singleWithdrawalProof), prevWithdrawalProof);
 
       const result = await pollWithdrawalProof(uuid);
       if (!result.proof) {

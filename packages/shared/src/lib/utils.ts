@@ -9,6 +9,10 @@ export const getRandomString = (length: number): string => {
   return bytes.toString("hex").slice(0, length);
 };
 
-export const uint8ArrayToString = (uint8Array: Uint8Array): string => {
-  return new TextDecoder().decode(uint8Array);
+export const bytesToBase64 = (bytes: Uint8Array): string => {
+  return btoa(
+    Array.from(bytes)
+      .map((byte) => String.fromCharCode(byte))
+      .join(""),
+  );
 };

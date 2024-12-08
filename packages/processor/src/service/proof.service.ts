@@ -79,6 +79,8 @@ export const generateWrappedProof = async (
 export const generateGnarkProof = async (wrappedProof: string) => {
   let jobId: string;
   try {
+    logger.info("Generating gnark proof");
+
     const createGnarkResult = await createGnarkProof(wrappedProof);
     if (!createGnarkResult.jobId) {
       throw new Error("Failed to create Gnark proof job");

@@ -82,10 +82,8 @@ export const submitWithdrawalProofToScroll = async (
 const formatContractWithdrawal = (withdrawal: WithdrawalWithProof) => {
   return {
     recipient: withdrawal.contractWithdrawal.recipient,
-    tokenIndex: BigInt(withdrawal.contractWithdrawal.token_index),
+    tokenIndex: BigInt(withdrawal.contractWithdrawal.tokenIndex),
     amount: BigInt(withdrawal.contractWithdrawal.amount),
     nullifier: withdrawal.contractWithdrawal.nullifier,
-    blockHash: withdrawal.contractWithdrawal.block_hash,
-    blockNumber: BigInt(withdrawal.contractWithdrawal.block_number),
   };
 };

@@ -21,8 +21,6 @@ export interface SubmitWithdrwalParams {
   tokenIndex: bigint;
   amount: bigint;
   nullifier: string;
-  blockHash: string;
-  blockNumber: bigint;
 }
 
 export interface WithdrawalWithProof {

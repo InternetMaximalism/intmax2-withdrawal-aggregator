@@ -23,7 +23,7 @@ export const fetchRequestingWithdrawals = async () => {
       },
     },
     orderBy: {
-      createdAt: WithdrawalPrisma.SortOrder.desc,
+      createdAt: WithdrawalPrisma.SortOrder.asc,
     },
   });
 

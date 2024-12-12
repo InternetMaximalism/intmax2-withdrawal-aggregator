@@ -3,11 +3,11 @@ import {
   type ContractCallParameters,
   WithdrawalAbi,
   config,
-  executeTransaction,
+  executeEthersTransaction,
   getNonce,
   getWalletClient,
   logger,
-  replacedTransaction,
+  replacedEthersTransaction,
   waitForTransactionConfirmation,
 } from "@intmax2-withdrawal-aggregator/shared";
 import type { Abi, PublicClient } from "viem";
@@ -93,7 +93,7 @@ export const submitWithdrawalProofWithRetry = async (
   };
 
   if (pendingNonce > currentNonce) {
-    return await replacedTransaction({
+    return await replacedEthersTransaction({
       ethereumClient,
       walletClientData,
       contractCallParams,
@@ -101,7 +101,7 @@ export const submitWithdrawalProofWithRetry = async (
     });
   }
 
-  const transactionResult = await executeTransaction({
+  const transactionResult = await executeEthersTransaction({
     ethereumClient,
     walletClientData,
     contractCallParams,

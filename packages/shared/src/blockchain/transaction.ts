@@ -20,13 +20,17 @@ export const executeTransaction = async ({
   const { nonce } = contractCallOptions ?? {};
 
   try {
-    logger.info(`functionName: ${functionName}, args: ${args}, nonce: ${nonce}`);
+    const gasPrice = await ethereumClient.getGasPrice();
+    logger.info(
+      `functionName: ${functionName}, args: ${args}, nonce: ${nonce} gasPrice: ${gasPrice}`,
+    );
 
     const { request } = await ethereumClient.simulateContract({
       address: contractAddress,
       abi,
       functionName,
       account,
+      gasPrice: gasPrice * 2n,
       args,
       nonce,
     });

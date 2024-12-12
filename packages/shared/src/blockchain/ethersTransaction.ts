@@ -12,7 +12,7 @@ interface TransactionExecutionParams {
   contractCallOptions?: ContractCallOptions;
 }
 
-export const executeTransaction = async ({
+export const executeEthersTransaction = async ({
   ethereumClient,
   walletClientData,
   contractCallParams,
@@ -35,7 +35,7 @@ export const executeTransaction = async ({
       nonce,
     });
 
-    const transactionHash = tx.hash;
+    const transactionHash = tx.hash as `0x${string}`;
     logger.info(`${functionName} transaction initiated with hash: ${transactionHash}`);
 
     return {
@@ -50,5 +50,31 @@ export const executeTransaction = async ({
       console.error("An unknown error occurred");
       throw new Error("Unknown transaction error");
     }
+  }
+};
+
+export const replacedEthersTransaction = async ({
+  ethereumClient,
+  walletClientData,
+  contractCallParams,
+  contractCallOptions,
+}: TransactionExecutionParams) => {
+  logger.warn(`Transaction was replaced. Sending new transaction...`);
+
+  try {
+    const transactionResult = await executeEthersTransaction({
+      ethereumClient,
+      walletClientData,
+      contractCallParams,
+      contractCallOptions,
+    });
+
+    return transactionResult;
+  } catch (error) {
+    logger.warn(
+      `Failed to send replaced transaction: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+
+    throw error;
   }
 };

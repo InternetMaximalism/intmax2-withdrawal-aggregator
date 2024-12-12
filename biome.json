@@ -137,6 +137,6 @@
     }
   ],
   "files": {
-    "ignore": ["**/node_modules", "**/dist", "package.json"]
+    "ignore": ["**/node_modules", "**/dist", "package.json", "**/typechainTypes/**"]
   }
 }

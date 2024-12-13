@@ -9,6 +9,8 @@ import {
   logger,
   replacedEthersTransaction,
   waitForTransactionConfirmation,
+  executeTransaction,
+  replacedTransaction,
 } from "@intmax2-withdrawal-aggregator/shared";
 import type { Abi, PublicClient } from "viem";
 import {
@@ -38,6 +40,7 @@ export const submitWithdrawalProof = async (
         ethereumClient,
         walletClientData,
         parmas,
+        attempt,
       );
 
       const transaction = await waitForTransactionConfirmation(
@@ -74,6 +77,7 @@ export const submitWithdrawalProofWithRetry = async (
   ethereumClient: PublicClient,
   walletClientData: ReturnType<typeof getWalletClient>,
   params: WithdrawalParams,
+  attempt: number,
 ) => {
   const contractCallParams: ContractCallParameters = {
     contractAddress: config.WITHDRAWAL_CONTRACT_ADDRESS as `0x${string}`,
@@ -93,7 +97,9 @@ export const submitWithdrawalProofWithRetry = async (
   };
 
   if (pendingNonce > currentNonce) {
-    return await replacedEthersTransaction({
+    const transactionExecutor = attempt % 2 === 0 ? replacedEthersTransaction : replacedTransaction;
+
+    return await transactionExecutor({
       ethereumClient,
       walletClientData,
       contractCallParams,
@@ -101,7 +107,9 @@ export const submitWithdrawalProofWithRetry = async (
     });
   }
 
-  const transactionResult = await executeEthersTransaction({
+  const transactionExecutor = attempt % 2 === 0 ? executeEthersTransaction : executeTransaction;
+
+  const transactionResult = await transactionExecutor({
     ethereumClient,
     walletClientData,
     contractCallParams,

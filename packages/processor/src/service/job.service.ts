@@ -24,7 +24,6 @@ export const performJob = async (data: QueueJobData): Promise<void> => {
       return;
     }
 
-    // TODO: filter group processing, once withdrawal group is processing, skip
     await withdrawalManager.updateGroup(groupId, {
       status: WithdrawalGroupStatus.PROCESSING,
     });
@@ -46,8 +45,6 @@ export const performJob = async (data: QueueJobData): Promise<void> => {
 
     logger.error(`Error processing withdrawal group ${groupId}: ${message}`);
 
-    // TODO: not reverted, but failed if withdrawal request is duplicated
-    // NOTE: If an error occurs on submit proof, we mark all withdrawals as failed, Base Error
     if (message.includes(EXECUTION_REVERTED_ERROR_MESSAGE)) {
       logger.warn(`Marking all withdrawals in group ${groupId} as failed`);
 

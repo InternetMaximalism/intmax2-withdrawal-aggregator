@@ -37,4 +37,6 @@ export const config = cleanEnv(process.env, {
   QUEUE_CONCURRENCY: num({ default: 2 }),
   // group
   WITHDRAWAL_GROUP_SIZE: num({ default: 5 }),
+  // scroll
+  SCROLL_GAS_MULTIPLIER: num({ default: 2 }), // for l1 fee
 });

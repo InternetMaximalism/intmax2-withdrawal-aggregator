@@ -1,8 +1,8 @@
 import { Block, FeeData, ethers } from "ethers";
 import type { PublicClient } from "viem";
+import { config } from "../config";
 
 const PRECISION = 10n;
-const SCROLL_GAS_MULTIPLIER = 1.2; // for l1 fee
 
 const calculateAdjustedGasPrices = (multiplier: number, baseGasPrice: bigint) => {
   const multiplierScaled = BigInt(Math.round(multiplier * Number(PRECISION)));
@@ -33,7 +33,7 @@ const getGasPrice = (block: Block | null, feeData: FeeData) => {
   const gasPrice = feeData.gasPrice ?? 0n;
   const baseGasPrice = baseFee > gasPrice ? baseFee : gasPrice;
 
-  const multiplierGasPrice = calculateAdjustedGasPrices(SCROLL_GAS_MULTIPLIER, baseGasPrice);
+  const multiplierGasPrice = calculateAdjustedGasPrices(config.SCROLL_GAS_MULTIPLIER, baseGasPrice);
   return multiplierGasPrice.gasPrice + (feeData?.maxPriorityFeePerGas ?? 0n);
 };
 

@@ -13,6 +13,14 @@ export interface ContractCallOptions {
   nonce?: number;
 }
 
+export interface ContractCallOptionsEthers {
+  value?: bigint;
+  nonce?: number;
+  gasPrice?: bigint;
+  maxFeePerGas?: bigint;
+  maxPriorityFeePerGas?: bigint;
+}
+
 export interface BaseEvent {
   name: string;
   address: string;
@@ -44,4 +52,9 @@ export interface ClaimedWithdrawalEvent extends BaseEvent {
 
 export interface ClaimedWithdrawalEventLog extends WithdrawalEventLog {
   recipient: string;
+}
+
+export interface RetryOptionsEthers {
+  nonce?: number | null;
+  gasPrice: bigint | null;
 }

@@ -1,39 +1,54 @@
-import { ethers } from "ethers";
-import { type PublicClient, toHex } from "viem";
-import { logger } from "../lib";
-import { Withdrawal__factory } from "../typechainTypes";
-import type { ContractCallOptions, ContractCallParameters } from "../types";
-import { getWalletClient } from "./wallet";
+import { logger } from "../lib/logger";
+import type { ContractCallOptionsEthers, ContractCallParameters } from "../types";
 
-interface TransactionExecutionParams {
-  ethereumClient: PublicClient;
-  walletClientData: ReturnType<typeof getWalletClient>;
-  contractCallParams: ContractCallParameters;
-  contractCallOptions?: ContractCallOptions;
+interface EthersTransactionExecutionParams {
+  functionName: string;
+  contract: any;
+  callArgs: any;
 }
 
-export const executeEthersTransaction = async ({
-  ethereumClient,
-  walletClientData,
-  contractCallParams,
-  contractCallOptions,
-}: TransactionExecutionParams) => {
-  const { functionName, contractAddress, args } = contractCallParams;
-  const { nonce } = contractCallOptions ?? {};
+export const getEthersTxOptions = (
+  contractCallParams: ContractCallParameters,
+  contractCallOptions: ContractCallOptionsEthers,
+) => {
+  const { functionName, args } = contractCallParams;
+  const { nonce, gasPrice, maxFeePerGas, maxPriorityFeePerGas, value } = contractCallOptions ?? {};
 
-  try {
-    logger.info(`functionName: ${functionName}, args: ${args}, nonce: ${nonce}`);
-
-    const provider = new ethers.JsonRpcProvider(ethereumClient.transport.url);
-    const signer = new ethers.Wallet(
-      toHex(walletClientData.account.getHdKey().privateKey!),
-      provider,
+  if (gasPrice) {
+    logger.info(
+      `functionName: ${functionName}, args: ${args}, nonce: ${nonce}, gasPrice: ${gasPrice?.toString()}`,
     );
 
-    const contract = Withdrawal__factory.connect(contractAddress, signer);
-    const tx = await contract.submitWithdrawalProof(args[0], args[1], args[2], {
+    return {
       nonce,
-    });
+      gasPrice,
+      type: 0,
+    };
+  }
+
+  logger.info(
+    `functionName: ${functionName}, args: ${args}, nonce: ${nonce}, maxFeePerGas: ${maxFeePerGas?.toString()} maxPriorityFeePerGas: ${maxPriorityFeePerGas?.toString()}`,
+  );
+
+  return {
+    nonce,
+    maxFeePerGas,
+    maxPriorityFeePerGas,
+    ...(value ? { value } : {}),
+  };
+};
+
+export const executeEthersTransaction = async ({
+  functionName,
+  contract,
+  callArgs,
+}: EthersTransactionExecutionParams) => {
+  try {
+    if (typeof contract[functionName] !== "function") {
+      throw new Error(`Method ${functionName} does not exist on contract`);
+    }
+
+    const tx = await contract[functionName](...callArgs);
 
     const transactionHash = tx.hash as `0x${string}`;
     logger.info(`${functionName} transaction initiated with hash: ${transactionHash}`);
@@ -54,19 +69,17 @@ export const executeEthersTransaction = async ({
 };
 
 export const replacedEthersTransaction = async ({
-  ethereumClient,
-  walletClientData,
-  contractCallParams,
-  contractCallOptions,
-}: TransactionExecutionParams) => {
+  functionName,
+  contract,
+  callArgs,
+}: EthersTransactionExecutionParams) => {
   logger.warn(`Transaction was replaced. Sending new transaction...`);
 
   try {
     const transactionResult = await executeEthersTransaction({
-      ethereumClient,
-      walletClientData,
-      contractCallParams,
-      contractCallOptions,
+      functionName,
+      contract,
+      callArgs,
     });
 
     return transactionResult;

@@ -1754,6 +1754,7 @@ __metadata:
   dependencies:
     "@intmax2-withdrawal-aggregator/shared": "workspace:*"
     axios: "npm:^1.7.9"
+    ethers: "npm:^6.13.4"
     tsx: "npm:^4.19.2"
     typescript: "npm:^5.7.2"
   languageName: unknown

@@ -1,19 +1,16 @@
-import { FeeData, ethers } from "ethers";
+import { Block, FeeData, ethers } from "ethers";
 import type { PublicClient } from "viem";
 
 const PRECISION = 10n;
+const SCROLL_GAS_MULTIPLIER = 1.2; // for l1 fee
 
-const calculateAdjustedGasPrices = (multiplier: number, feeData: FeeData) => {
+const calculateAdjustedGasPrices = (multiplier: number, baseGasPrice: bigint) => {
   const multiplierScaled = BigInt(Math.round(multiplier * Number(PRECISION)));
 
-  const gasPrice = (feeData.gasPrice! * multiplierScaled) / PRECISION;
-  const maxFeePerGas = (feeData.maxFeePerGas! * multiplierScaled) / PRECISION;
-  const maxPriorityFeePerGas = (feeData.maxPriorityFeePerGas! * multiplierScaled) / PRECISION;
+  const gasPrice = (baseGasPrice * multiplierScaled) / PRECISION;
 
   return {
     gasPrice,
-    maxFeePerGas,
-    maxPriorityFeePerGas,
   };
 };
 
@@ -22,13 +19,22 @@ export const getEthersMaxGasMultiplier = async (
   multiplier: number,
 ) => {
   const provider = new ethers.JsonRpcProvider(ethereumClient.transport.url);
-  const feeData = await provider.getFeeData();
-  const { gasPrice, maxFeePerGas, maxPriorityFeePerGas } = calculateAdjustedGasPrices(
-    multiplier,
-    feeData,
-  );
 
-  return { gasPrice, maxFeePerGas, maxPriorityFeePerGas };
+  const [block, feeData] = await Promise.all([provider.getBlock("latest"), provider.getFeeData()]);
+  const baseGasPrice = getGasPrice(block, feeData);
+
+  const { gasPrice } = calculateAdjustedGasPrices(multiplier, baseGasPrice);
+
+  return { gasPrice };
+};
+
+const getGasPrice = (block: Block | null, feeData: FeeData) => {
+  const baseFee = block?.baseFeePerGas ?? 0n;
+  const gasPrice = feeData.gasPrice ?? 0n;
+  const baseGasPrice = baseFee > gasPrice ? baseFee : gasPrice;
+
+  const multiplierGasPrice = calculateAdjustedGasPrices(SCROLL_GAS_MULTIPLIER, baseGasPrice);
+  return multiplierGasPrice.gasPrice + (feeData?.maxPriorityFeePerGas ?? 0n);
 };
 
 export const calculateEthersIncreasedGasPrice = (

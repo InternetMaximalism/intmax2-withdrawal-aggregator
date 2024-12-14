@@ -16,7 +16,9 @@ export const getEthersTxOptions = (
 
   if (gasPrice) {
     logger.info(
-      `functionName: ${functionName}, args: ${args}, nonce: ${nonce}, gasPrice: ${gasPrice?.toString()}`,
+      `functionName: ${functionName}, args: ${JSON.stringify(args, (_, value) =>
+        typeof value === "bigint" ? value.toString() : value,
+      )} nonce: ${nonce}, gasPrice: ${gasPrice?.toString()} type: 0`,
     );
 
     return {
@@ -27,7 +29,7 @@ export const getEthersTxOptions = (
   }
 
   logger.info(
-    `functionName: ${functionName}, args: ${args}, nonce: ${nonce}, maxFeePerGas: ${maxFeePerGas?.toString()} maxPriorityFeePerGas: ${maxPriorityFeePerGas?.toString()}`,
+    `functionName: ${functionName}, nonce: ${nonce}, maxFeePerGas: ${maxFeePerGas?.toString()} maxPriorityFeePerGas: ${maxPriorityFeePerGas?.toString()}`,
   );
 
   return {

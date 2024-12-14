@@ -20,6 +20,7 @@ import { ethers } from "ethers";
 import { type Abi, type PublicClient, toHex } from "viem";
 import {
   TRANSACTION_MAX_RETRIES,
+  TRANSACTION_MISSING_REVERT_DATA,
   TRANSACTION_REPLACEMENT_FEE_TOO_LOW,
   TRANSACTION_WAIT_TIMEOUT_ERROR_MESSAGE,
   WAIT_TRANSACTION_TIMEOUT,
@@ -76,7 +77,8 @@ export const submitWithdrawalProof = async (
 
       if (
         message.includes(TRANSACTION_WAIT_TIMEOUT_ERROR_MESSAGE) ||
-        message.includes(TRANSACTION_REPLACEMENT_FEE_TOO_LOW)
+        message.includes(TRANSACTION_REPLACEMENT_FEE_TOO_LOW) ||
+        message.includes(TRANSACTION_MISSING_REVERT_DATA)
       ) {
         logger.warn(`Attempt ${attempt + 1} failed. Retrying with higher gas...`);
         continue;

@@ -17,6 +17,7 @@ export const batchUpdateWithdrawalStatusTransactions = async (
     transactions.push(
       batchUpdateWithdrawalStatus(
         directWithdrawals,
+        WithdrawalStatus.relayed,
         WithdrawalStatus.success,
         WithdrawalEvents.DIRECT_WITHDRAWAL_SUCCEEDED,
       ),
@@ -27,6 +28,7 @@ export const batchUpdateWithdrawalStatusTransactions = async (
     transactions.push(
       batchUpdateWithdrawalStatus(
         claimableWithdrawals,
+        WithdrawalStatus.relayed,
         WithdrawalStatus.need_claim,
         WithdrawalEvents.WITHDRAWAL_CLAIMABLE,
       ),
@@ -37,6 +39,7 @@ export const batchUpdateWithdrawalStatusTransactions = async (
     transactions.push(
       batchUpdateWithdrawalStatus(
         claimedWithdrawals,
+        WithdrawalStatus.need_claim,
         WithdrawalStatus.success,
         WithdrawalEvents.CLAIMED_WITHDRAWAL,
       ),
@@ -54,11 +57,12 @@ export const batchUpdateWithdrawalStatusTransactions = async (
 
 const batchUpdateWithdrawalStatus = (
   withdrawalEventLogs: WithdrawalEventLog[],
-  status: WithdrawalStatus,
+  previousStatus: WithdrawalStatus,
+  nextStatus: WithdrawalStatus,
   type: WithdrawalEventType,
 ) => {
   logger.info(
-    `Batch update withdrawal status: ${status} for ${withdrawalEventLogs.length} ${type} withdrawals`,
+    `Batch update withdrawal status: ${nextStatus} for ${withdrawalEventLogs.length} ${type} withdrawals`,
   );
 
   return withdrawalPrisma.withdrawal.updateMany({
@@ -66,10 +70,10 @@ const batchUpdateWithdrawalStatus = (
       withdrawalHash: {
         in: withdrawalEventLogs.map(({ withdrawalHash }) => withdrawalHash),
       },
-      status: WithdrawalStatus.relayed,
+      status: previousStatus,
     },
     data: {
-      status,
+      status: nextStatus,
     },
   });
 };

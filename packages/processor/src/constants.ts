@@ -20,3 +20,4 @@ export const TRANSACTION_WAIT_TIMEOUT_ERROR_MESSAGE =
   "Timed out while waiting for transaction with hash";
 export const EXECUTION_REVERTED_ERROR_MESSAGE = "Execution reverted";
 export const TRANSACTION_REPLACEMENT_FEE_TOO_LOW = "replacement fee too low";
+export const TRANSACTION_MISSING_REVERT_DATA = "missing revert data"; // because of the gasPrice

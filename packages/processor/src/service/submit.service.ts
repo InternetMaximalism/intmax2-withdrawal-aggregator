@@ -1,24 +1,30 @@
 import {
-  type ContractCallOptions,
   type ContractCallParameters,
   WithdrawalAbi,
   config,
   executeEthersTransaction,
-  executeTransaction,
   getNonce,
   getWalletClient,
   logger,
+  getEthersTxOptions,
   replacedEthersTransaction,
-  replacedTransaction,
   waitForTransactionConfirmation,
+  calculateGasMultiplier,
+  Withdrawal__factory,
+  RetryOptionsEthers,
+  getEthersMaxGasMultiplier,
+  ContractCallOptionsEthers,
+  calculateEthersIncreasedGasPrice,
 } from "@intmax2-withdrawal-aggregator/shared";
-import type { Abi, PublicClient } from "viem";
+import { type Abi, type PublicClient, toHex } from "viem";
 import {
   TRANSACTION_MAX_RETRIES,
   TRANSACTION_WAIT_TIMEOUT_ERROR_MESSAGE,
+  TRANSACTION_REPLACEMENT_FEE_TOO_LOW,
   WAIT_TRANSACTION_TIMEOUT,
 } from "../constants";
 import type { GnarkProof, SubmitContractWithdrawal } from "../types";
+import { ethers } from "ethers";
 
 interface WithdrawalParams {
   contractWithdrawals: SubmitContractWithdrawal[];
@@ -34,13 +40,20 @@ export const submitWithdrawalProof = async (
   walletClientData: ReturnType<typeof getWalletClient>,
   parmas: WithdrawalParams,
 ) => {
+  const retryOptions: RetryOptionsEthers = {
+    gasPrice: null,
+  };
+
   for (let attempt = 0; attempt < TRANSACTION_MAX_RETRIES; attempt++) {
     try {
+      const multiplier = calculateGasMultiplier(attempt);
+
       const { transactionHash } = await submitWithdrawalProofWithRetry(
         ethereumClient,
         walletClientData,
         parmas,
-        attempt,
+        multiplier,
+        retryOptions,
       );
 
       const transaction = await waitForTransactionConfirmation(
@@ -61,7 +74,10 @@ export const submitWithdrawalProof = async (
         throw new Error("Transaction Max retries reached");
       }
 
-      if (message.includes(TRANSACTION_WAIT_TIMEOUT_ERROR_MESSAGE)) {
+      if (
+        message.includes(TRANSACTION_WAIT_TIMEOUT_ERROR_MESSAGE) ||
+        message.includes(TRANSACTION_REPLACEMENT_FEE_TOO_LOW)
+      ) {
         logger.warn(`Attempt ${attempt + 1} failed. Retrying with higher gas...`);
         continue;
       }
@@ -77,7 +93,8 @@ export const submitWithdrawalProofWithRetry = async (
   ethereumClient: PublicClient,
   walletClientData: ReturnType<typeof getWalletClient>,
   params: WithdrawalParams,
-  attempt: number,
+  multiplier: number,
+  retryOptions: RetryOptionsEthers,
 ) => {
   const contractCallParams: ContractCallParameters = {
     contractAddress: config.WITHDRAWAL_CONTRACT_ADDRESS as `0x${string}`,
@@ -87,33 +104,54 @@ export const submitWithdrawalProofWithRetry = async (
     args: [params.contractWithdrawals, params.publicInputs, params.proof],
   };
 
-  const { pendingNonce, currentNonce } = await getNonce(
-    ethereumClient,
-    walletClientData.account.address,
-  );
+  const [{ pendingNonce, currentNonce }, gasPriceData] = await Promise.all([
+    getNonce(ethereumClient, walletClientData.account.address),
+    getEthersMaxGasMultiplier(ethereumClient, multiplier),
+  ]);
+  let { gasPrice } = gasPriceData;
 
-  const contractCallOptions: ContractCallOptions = {
+  if (retryOptions.gasPrice) {
+    const { newGasPrice } = calculateEthersIncreasedGasPrice(retryOptions.gasPrice, gasPrice);
+
+    gasPrice = newGasPrice;
+
+    logger.info(`Increased gas fees multiplier: ${multiplier} - gasPrice: ${gasPrice}`);
+  }
+
+  retryOptions.gasPrice = gasPrice;
+
+  const contractCallOptions: ContractCallOptionsEthers = {
     nonce: currentNonce,
+    gasPrice,
   };
 
-  if (pendingNonce > currentNonce) {
-    const transactionExecutor = attempt % 2 === 0 ? replacedEthersTransaction : replacedTransaction;
+  const provider = new ethers.JsonRpcProvider(ethereumClient.transport.url);
+  const signer = new ethers.Wallet(
+    toHex(walletClientData.account.getHdKey().privateKey!),
+    provider,
+  );
+  const contract = Withdrawal__factory.connect(contractCallParams.contractAddress, signer);
 
-    return await transactionExecutor({
-      ethereumClient,
-      walletClientData,
-      contractCallParams,
-      contractCallOptions,
+  const ethersTxOptions = getEthersTxOptions(contractCallParams, contractCallOptions ?? {});
+  const callArgs = [
+    contractCallParams.args[0],
+    contractCallParams.args[1],
+    contractCallParams.args[2],
+    ethersTxOptions,
+  ];
+
+  if (pendingNonce > currentNonce) {
+    return await replacedEthersTransaction({
+      functionName: contractCallParams.functionName,
+      contract,
+      callArgs,
     });
   }
 
-  const transactionExecutor = attempt % 2 === 0 ? executeEthersTransaction : executeTransaction;
-
-  const transactionResult = await transactionExecutor({
-    ethereumClient,
-    walletClientData,
-    contractCallParams,
-    contractCallOptions,
+  const transactionResult = await executeEthersTransaction({
+    functionName: contractCallParams.functionName,
+    contract,
+    callArgs,
   });
 
   return transactionResult;

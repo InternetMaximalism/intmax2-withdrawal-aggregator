@@ -1,5 +1,5 @@
 import { BaseError, ContractFunctionRevertedError, type PublicClient } from "viem";
-import { logger } from "../lib";
+import { logger, sleep } from "../lib";
 import type { ContractCallOptions, ContractCallParameters } from "../types";
 import { getWalletClient } from "./wallet";
 
@@ -77,29 +77,44 @@ export const waitForTransactionConfirmation = async (
   functionName: string,
   options?: {
     timeout?: number;
+    maxRetries?: number;
+    retryDelay?: number;
   },
 ) => {
-  const { timeout } = options ?? {};
+  const { timeout, maxRetries = 3, retryDelay = 1000 } = options ?? {};
+  let retryCount = 0;
 
-  try {
-    const receipt = await ethereumClient.waitForTransactionReceipt({
-      hash: transactionHash,
-      timeout,
-    });
+  while (true) {
+    try {
+      const receipt = await ethereumClient.waitForTransactionReceipt({
+        hash: transactionHash,
+        timeout,
+      });
 
-    if (receipt.status !== "success") {
-      throw new Error(`Transaction failed with status: ${receipt.status}`);
+      if (receipt.status !== "success") {
+        throw new Error(`Transaction failed with status: ${receipt.status}`);
+      }
+
+      logger.info(`${functionName} transaction confirmed`);
+      return receipt;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+
+      // NOTE: Scroll Sepolia
+      if (errorMessage.includes("could not be found")) {
+        if (retryCount < maxRetries) {
+          retryCount++;
+          logger.info(
+            `Transaction not found, retrying (${retryCount}/${maxRetries}) after ${retryDelay}ms delay...`,
+          );
+          await sleep(retryDelay);
+          continue;
+        }
+      }
+
+      logger.warn(`Failed to confirm ${functionName} transaction: ${errorMessage}`);
+      throw error;
     }
-
-    logger.info(`${functionName} transaction confirmed`);
-
-    return receipt;
-  } catch (error) {
-    logger.warn(
-      `Failed to confirm ${functionName} transaction: ${error instanceof Error ? error.message : "Unknown error"}`,
-    );
-
-    throw error;
   }
 };
 

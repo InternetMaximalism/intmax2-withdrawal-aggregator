@@ -5,3 +5,4 @@ export * from "./constants";
 export * from "./db";
 export * from "./lib";
 export * from "./types";
+export * from "./typechainTypes";

@@ -8,6 +8,7 @@ import {
   fetchEvents,
   logger,
   withdrawalClaimableEvent,
+  ClaimedWithdrawalEvent,
 } from "@intmax2-withdrawal-aggregator/shared";
 import { parseAbiItem } from "abitype";
 import type { PublicClient } from "viem";
@@ -58,7 +59,7 @@ export const handleAllWithdrawalEvents = async (
       eventInterface: withdrawalClaimableEvent,
       eventName: "WithdrawalClaimable",
     }),
-    handleWithdrawalEvent<WithdrawalClaimableEvent>(ethereumClient, {
+    handleWithdrawalEvent<ClaimedWithdrawalEvent>(ethereumClient, {
       startBlockNumber: getLastProcessedBlockNumberByEventName(events, "ClaimedWithdrawal"),
       endBlockNumber: currentBlockNumber,
       eventInterface: claimedWithdrawalEvent,

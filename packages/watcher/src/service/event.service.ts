@@ -1,5 +1,6 @@
 import {
   BLOCK_RANGE_MINIMUM,
+  ClaimedWithdrawalEvent,
   DirectWithdrawalSuccessedEvent,
   type Event,
   WithdrawalClaimableEvent,
@@ -58,7 +59,7 @@ export const handleAllWithdrawalEvents = async (
       eventInterface: withdrawalClaimableEvent,
       eventName: "WithdrawalClaimable",
     }),
-    handleWithdrawalEvent<WithdrawalClaimableEvent>(ethereumClient, {
+    handleWithdrawalEvent<ClaimedWithdrawalEvent>(ethereumClient, {
       startBlockNumber: getLastProcessedBlockNumberByEventName(events, "ClaimedWithdrawal"),
       endBlockNumber: currentBlockNumber,
       eventInterface: claimedWithdrawalEvent,

@@ -7,6 +7,7 @@ import {
   calculateEthersIncreasedGasPrice,
   calculateGasMultiplier,
   config,
+  ethersWaitForTransactionConfirmation,
   executeEthersTransaction,
   getEthersMaxGasMultiplier,
   getEthersTxOptions,
@@ -14,15 +15,15 @@ import {
   getWalletClient,
   logger,
   replacedEthersTransaction,
-  waitForTransactionConfirmation,
 } from "@intmax2-withdrawal-aggregator/shared";
 import { ethers } from "ethers";
 import { type Abi, type PublicClient, toHex } from "viem";
 import {
+  ETHERS_CONFIRIMATIONS,
+  ETHERS_WAIT_TRANSACTION_TIMEOUT_MESSAGE,
   TRANSACTION_MAX_RETRIES,
   TRANSACTION_MISSING_REVERT_DATA,
   TRANSACTION_REPLACEMENT_FEE_TOO_LOW,
-  TRANSACTION_WAIT_TIMEOUT_ERROR_MESSAGE,
   WAIT_TRANSACTION_TIMEOUT,
 } from "../constants";
 import type { GnarkProof, SubmitContractWithdrawal } from "../types";
@@ -57,16 +58,17 @@ export const submitWithdrawalProof = async (
         retryOptions,
       );
 
-      const transaction = await waitForTransactionConfirmation(
+      const receipt = await ethersWaitForTransactionConfirmation(
         ethereumClient,
         transactionHash,
         "submitWithdrawalProof",
         {
+          confirms: ETHERS_CONFIRIMATIONS,
           timeout: WAIT_TRANSACTION_TIMEOUT,
         },
       );
 
-      return transaction;
+      return receipt;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error";
       logger.warn(`Error sending transaction: ${message}`);
@@ -76,7 +78,7 @@ export const submitWithdrawalProof = async (
       }
 
       if (
-        message.includes(TRANSACTION_WAIT_TIMEOUT_ERROR_MESSAGE) ||
+        message.includes(ETHERS_WAIT_TRANSACTION_TIMEOUT_MESSAGE) ||
         message.includes(TRANSACTION_REPLACEMENT_FEE_TOO_LOW) ||
         message.includes(TRANSACTION_MISSING_REVERT_DATA)
       ) {

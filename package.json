@@ -1,0 +1,36 @@
+{
+  "name": "intmax2-withdrawal-aggregator",
+  "version": "1.2.6",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "yarn workspaces foreach --all --topological run build",
+    "build:shared": "yarn workspace @intmax2-withdrawal-aggregator/shared run build",
+    "build:parallel": "yarn workspaces foreach --all -pt run build",
+    "lint": "biome lint .",
+    "format": "biome check --write --unsafe .",
+    "check": "biome check .",
+    "migrate": "prisma migrate dev --schema=./prisma/schema.event.prisma",
+    "migrate:deploy": "prisma migrate deploy --schema=./prisma/schema.event.prisma",
+    "generate:withdrawal": "prisma generate --schema=./prisma/schema.withdrawal.prisma",
+    "generate:event": "prisma generate --schema=./prisma/schema.event.prisma",
+    "generate": "yarn generate:withdrawal && yarn generate:event",
+    "reset": "prisma migrate reset --schema=./prisma/schema.event.prisma"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/node": "^22.10.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@prisma/client": "6.0.1",
+    "date-fns": "^4.1.0",
+    "prisma": "^6.0.1"
+  },
+  "prisma": {
+    "seed": "tsx --env-file=./.env prisma/seed.ts"
+  },
+  "packageManager": "yarn@4.1.1+sha224.00f08619463229f8ba40c4ee90e8c2e4ced1f11c3115c26f3b98432e"
+}

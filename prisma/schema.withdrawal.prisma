@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+  output =  "../node_modules/.prisma/withdrawal-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("WITHDRAWAL_DATABASE_URL")
+}
+
+model sqlx_migrations {
+  version        BigInt   @id
+  description    String
+  installed_on   DateTime @default(now()) @db.Timestamptz(6)
+  success        Boolean
+  checksum       Bytes
+  execution_time BigInt
+
+  @@map("_sqlx_migrations")
+}
+
+model Withdrawal {
+  uuid                  String           @id
+  status                WithdrawalStatus @default(requested)
+  pubkey                String           @db.Char(66)
+  recipient             String           @db.Char(42)
+  withdrawalHash        String           @db.Char(66) @map("withdrawal_hash")
+  contractWithdrawal    Json             @map("contract_withdrawal")
+  singleWithdrawalProof Bytes?           @map("single_withdrawal_proof")
+  createdAt             DateTime         @default(now()) @db.Timestamptz(6) @map("created_at")
+
+  @@index([pubkey], map: "idx_withdrawals_pubkey")
+  @@index([recipient], map: "idx_withdrawals_recipient")
+
+  @@map("withdrawals")
+}
+
+enum WithdrawalStatus {
+  requested
+  relayed
+  success
+  need_claim
+  failed
+
+  @@map("withdrawal_status")
+}

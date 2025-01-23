@@ -4,16 +4,18 @@ import { handleAllWithdrawalEvents } from "./event.service";
 import { batchUpdateWithdrawalStatusTransactions } from "./withdrawal.service";
 
 export const performJob = async (): Promise<void> => {
-  const events = await eventPrisma.event.findMany({
-    where: {
-      name: {
-        in: WITHDRAWAL_EVENT_NAMES,
-      },
-    },
-  });
-
   const ethereumClient = createNetworkClient("ethereum");
-  const currentBlockNumber = await ethereumClient.getBlockNumber();
+
+  const [events, currentBlockNumber] = await Promise.all([
+    eventPrisma.event.findMany({
+      where: {
+        name: {
+          in: WITHDRAWAL_EVENT_NAMES,
+        },
+      },
+    }),
+    ethereumClient.getBlockNumber(),
+  ]);
 
   const { directWithdrawals, claimableWithdrawals, claimedWithdrawals } =
     await handleAllWithdrawalEvents(ethereumClient, currentBlockNumber, events);

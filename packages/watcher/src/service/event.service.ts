@@ -1,6 +1,6 @@
 import {
   BLOCK_RANGE_MINIMUM,
-  ClaimedWithdrawalEvent,
+  type ClaimedWithdrawalEvent,
   type DirectWithdrawalSuccessedEvent,
   type Event,
   type WithdrawalClaimableEvent,
@@ -24,13 +24,20 @@ const handleWithdrawalEvent = async <T extends { args: { withdrawalHash: string 
     eventName: WithdrawalEventType;
   },
 ) => {
+  const { startBlockNumber, endBlockNumber } = params;
   logger.info(
-    `Fetching ${params.eventName} events from block ${params.startBlockNumber} to ${params.endBlockNumber}`,
+    `Fetching ${params.eventName} events from block ${startBlockNumber} to ${endBlockNumber}`,
   );
 
+  if (startBlockNumber > endBlockNumber) {
+    throw new Error(
+      `startBlockNumber ${startBlockNumber} is greater than currentBlockNumber ${endBlockNumber}`,
+    );
+  }
+
   const events = await fetchEvents<T>(ethereumClient, {
-    startBlockNumber: params.startBlockNumber,
-    endBlockNumber: params.endBlockNumber,
+    startBlockNumber,
+    endBlockNumber,
     blockRange: BLOCK_RANGE_MINIMUM,
     contractAddress: LIQUIDITY_CONTRACT_ADDRESS,
     eventInterface: params.eventInterface,

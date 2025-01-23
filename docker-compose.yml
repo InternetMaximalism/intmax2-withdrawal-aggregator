@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:15.5
+    image: postgres:15.10
     container_name: intmax2-withdrawal-aggregator-postgres
     hostname: postgres
     restart: unless-stopped
@@ -14,7 +14,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   redis:
-    image: redis:7.4.1
+    image: redis:7.4.2
     container_name: intmax2-withdrawal-aggregator-redis
     hostname: redis
     restart: unless-stopped

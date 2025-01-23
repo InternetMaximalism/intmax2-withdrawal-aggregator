@@ -57,3 +57,19 @@ export interface WithdrawalProof {
     blockNumber: number;
   };
 }
+
+export interface ProverRequestParams {
+  method: "get" | "post";
+  path: string;
+  data?: unknown;
+  params?: Record<string, string>;
+}
+
+export interface SubmitWithdrawalParams {
+  contractWithdrawals: SubmitContractWithdrawal[];
+  publicInputs: {
+    lastWithdrawalHash: string;
+    withdrawalAggregator: string;
+  };
+  proof: GnarkProof["proof"];
+}

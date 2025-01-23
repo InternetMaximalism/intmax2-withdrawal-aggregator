@@ -24,4 +24,4 @@ export const TRANSACTION_MISSING_REVERT_DATA = "missing revert data"; // because
 
 // ethers
 export const ETHERS_WAIT_TRANSACTION_TIMEOUT_MESSAGE = "timeout";
-export const ETHERS_CONFIRIMATIONS = 1;
+export const ETHERS_CONFIRMATIONS = 1;

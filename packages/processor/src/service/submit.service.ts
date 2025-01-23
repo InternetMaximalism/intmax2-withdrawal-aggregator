@@ -1,7 +1,7 @@
 import {
-  ContractCallOptionsEthers,
+  type ContractCallOptionsEthers,
   type ContractCallParameters,
-  RetryOptionsEthers,
+  type RetryOptionsEthers,
   WithdrawalAbi,
   Withdrawal__factory,
   calculateEthersIncreasedGasPrice,
@@ -19,28 +19,19 @@ import {
 import { ethers } from "ethers";
 import { type Abi, type PublicClient, toHex } from "viem";
 import {
-  ETHERS_CONFIRIMATIONS,
+  ETHERS_CONFIRMATIONS,
   ETHERS_WAIT_TRANSACTION_TIMEOUT_MESSAGE,
   TRANSACTION_MAX_RETRIES,
   TRANSACTION_MISSING_REVERT_DATA,
   TRANSACTION_REPLACEMENT_FEE_TOO_LOW,
   WAIT_TRANSACTION_TIMEOUT,
 } from "../constants";
-import type { GnarkProof, SubmitContractWithdrawal } from "../types";
-
-interface WithdrawalParams {
-  contractWithdrawals: SubmitContractWithdrawal[];
-  publicInputs: {
-    lastWithdrawalHash: string;
-    withdrawalAggregator: string;
-  };
-  proof: GnarkProof["proof"];
-}
+import type { SubmitWithdrawalParams } from "../types";
 
 export const submitWithdrawalProof = async (
   ethereumClient: PublicClient,
   walletClientData: ReturnType<typeof getWalletClient>,
-  parmas: WithdrawalParams,
+  parmas: SubmitWithdrawalParams,
 ) => {
   const retryOptions: RetryOptionsEthers = {
     gasPrice: null,
@@ -63,7 +54,7 @@ export const submitWithdrawalProof = async (
         transactionHash,
         "submitWithdrawalProof",
         {
-          confirms: ETHERS_CONFIRIMATIONS,
+          confirms: ETHERS_CONFIRMATIONS,
           timeout: WAIT_TRANSACTION_TIMEOUT,
         },
       );
@@ -96,7 +87,7 @@ export const submitWithdrawalProof = async (
 export const submitWithdrawalProofWithRetry = async (
   ethereumClient: PublicClient,
   walletClientData: ReturnType<typeof getWalletClient>,
-  params: WithdrawalParams,
+  params: SubmitWithdrawalParams,
   multiplier: number,
   retryOptions: RetryOptionsEthers,
 ) => {

@@ -1,5 +1,5 @@
 import {
-  QueueJobData,
+  type QueueJobData,
   WithdrawalGroupStatus,
   WithdrawalStatus,
   logger,

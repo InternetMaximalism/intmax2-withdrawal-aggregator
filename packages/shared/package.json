@@ -3,21 +3,20 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "dependencies": {
-    "abitype": "^1.0.7",
-    "bull": "^4.16.4",
+    "abitype": "^1.0.8",
+    "bull": "^4.16.5",
     "envalid": "^8.0.0",
-    "ethers": "^6.13.4",
-    "pino": "^9.5.0",
+    "ethers": "^6.13.5",
+    "pino": "^9.6.0",
     "pino-pretty": "^13.0.0",
-    "viem": "^2.21.54"
+    "viem": "^2.22.11"
   },
   "scripts": {
     "build": "rm -rf dist tsconfig.tsbuildinfo && tsc",
     "typecheck": "tsc --noEmit"
   },
-  "packageManager": "yarn@4.1.1",
   "devDependencies": {
     "@types/bull": "^4.10.4",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }

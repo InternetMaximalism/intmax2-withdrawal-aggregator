@@ -5,15 +5,9 @@ import type {
   CreateProofResponse,
   GetZKProofResponse,
   GnarkProof,
+  ProverRequestParams,
   WithdrawalProof,
 } from "../types";
-
-interface ProverRequestParams {
-  method: "get" | "post";
-  path: string;
-  data?: unknown;
-  params?: Record<string, string>;
-}
 
 export const createWithdrawalProof = async (
   id: string,

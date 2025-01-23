@@ -48,6 +48,9 @@ jobs:
     - name: Install dependencies
       run: yarn
 
+    - name: Generate prisma
+      run: yarn generate
+
     - name: Lint
       run: yarn lint
 

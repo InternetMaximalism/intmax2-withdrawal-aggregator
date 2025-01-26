@@ -17,7 +17,7 @@ export class QueueManager {
 
   private queue: QueueType<QueueJobData>;
   private readonly defaultJobOptions: JobOptions = {
-    attempts: 3, // NOTE: 3 retries
+    attempts: 3,
     backoff: {
       type: "exponential",
       delay: 1000,
@@ -37,7 +37,7 @@ export class QueueManager {
     });
 
     this.queue.on("completed", (job: Job, result: any) => {
-      logger.info(`Job ${job.id} completed with result: ${result}`);
+      logger.info(`Job ${job.id} completed with result: ${JSON.stringify(result)}`);
     });
 
     this.queue.on("failed", (job: Job, error: Error) => {
@@ -57,7 +57,9 @@ export class QueueManager {
       try {
         return await processor(job);
       } catch (error) {
-        console.error(`Error processing job ${job.id}:`, error);
+        logger.error(
+          `Error processing job ${job.id}: ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
         throw error;
       }
     });

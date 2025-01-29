@@ -16,7 +16,7 @@ export const createWithdrawalProof = async (
 ) => {
   return makeProverRequest<CreateProofResponse>({
     method: "post",
-    path: "withdrawal-aggregator-prover/proof/withdrawal",
+    path: "aggregator-prover/proof/withdrawal",
     data: {
       id,
       singleWithdrawalProof,
@@ -32,7 +32,7 @@ export const createWrappedProof = async (
 ) => {
   return makeProverRequest<CreateProofResponse>({
     method: "post",
-    path: "withdrawal-aggregator-prover/proof/wrapper",
+    path: "aggregator-prover/proof/wrapper",
     data: {
       id,
       withdrawalAggregator: withdrawalAggregatorAddress,
@@ -44,14 +44,14 @@ export const createWrappedProof = async (
 export const getWithdrawalProof = async (proofId: string) => {
   return makeProverRequest<GetZKProofResponse<WithdrawalProof>>({
     method: "get",
-    path: `withdrawal-aggregator-prover/proof/withdrawal/${proofId}`,
+    path: `aggregator-prover/proof/withdrawal/${proofId}`,
   });
 };
 
 export const getWithdrawalWrapperProof = async (proofId: string) => {
   return makeProverRequest<GetZKProofResponse<string>>({
     method: "get",
-    path: `withdrawal-aggregator-prover/proof/wrapper/${proofId}`,
+    path: `aggregator-prover/proof/wrapper/${proofId}`,
   });
 };
 
@@ -79,7 +79,7 @@ const makeProverRequest = async <T>({ method, path, data, params }: ProverReques
   try {
     const requestConfig: AxiosRequestConfig = {
       method,
-      url: `${config.ZKP_PROVER_URL}/v1/${path}`,
+      url: `${config.ZKP_PROVER_URL}/v1/beta/${path}`,
       ...getHeaders(),
     };
 

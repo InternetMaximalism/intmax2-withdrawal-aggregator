@@ -32,7 +32,7 @@ export const createWrappedProof = async (
 ) => {
   return makeProverRequest<CreateProofResponse>({
     method: "post",
-    path: "aggregator-prover/proof/wrapper",
+    path: "aggregator-prover/proof/wrapper/withdrawal",
     data: {
       id,
       withdrawalAggregator: withdrawalAggregatorAddress,
@@ -51,7 +51,7 @@ export const getWithdrawalProof = async (proofId: string) => {
 export const getWithdrawalWrapperProof = async (proofId: string) => {
   return makeProverRequest<GetZKProofResponse<string>>({
     method: "get",
-    path: `aggregator-prover/proof/wrapper/${proofId}`,
+    path: `aggregator-prover/proof/wrapper/withdrawal/${proofId}`,
   });
 };
 

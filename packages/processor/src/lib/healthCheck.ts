@@ -1,5 +1,5 @@
 import http from "http";
-import { config, logger } from "@intmax2-withdrawal-aggregator/shared";
+import { config, logger } from "@intmax2-aggregator/shared";
 import { name } from "../../package.json";
 
 const server = http.createServer((req, res) => {

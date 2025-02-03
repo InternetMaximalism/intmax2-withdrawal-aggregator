@@ -11,7 +11,7 @@ export const config = cleanEnv(process.env, {
     choices: ["fatal", "error", "warn", "info", "debug", "trace"],
     default: "debug",
   }),
-  SERVICE_NAME: str({ default: "intmax2-withdrawal-aggregator" }),
+  SERVICE_NAME: str({ default: "intmax2-aggregator" }),
   SERVICE_VERSION: str({ default: "v0.0.0" }),
   // db
   EVENT_DATABASE_URL: str(),

@@ -3,7 +3,7 @@ import {
   WithdrawalStatus,
   logger,
   withdrawalPrisma,
-} from "@intmax2-withdrawal-aggregator/shared";
+} from "@intmax2-aggregator/shared";
 import type { WithdrawalEventType } from "../types";
 
 export const batchUpdateWithdrawalStatusTransactions = async (

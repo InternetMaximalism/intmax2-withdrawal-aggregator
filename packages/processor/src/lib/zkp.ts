@@ -1,4 +1,4 @@
-import { config } from "@intmax2-withdrawal-aggregator/shared";
+import { config } from "@intmax2-aggregator/shared";
 import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
 import type {
   CreateGnarkProofResponse,

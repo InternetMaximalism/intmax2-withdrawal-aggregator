@@ -3,6 +3,7 @@ import type { WithdrawalGroup } from "../types";
 import { RedisClient } from "./redis";
 
 export class WithdrawalManager {
+  private static instance: WithdrawalManager;
   private redis: Redis;
   private readonly keyPrefix = "withdrawal:";
   private readonly groupSetKey = "withdrawal:groups";
@@ -10,6 +11,13 @@ export class WithdrawalManager {
 
   constructor() {
     this.redis = RedisClient.getInstance().getClient()!;
+  }
+
+  public static getInstance(): WithdrawalManager {
+    if (!WithdrawalManager.instance) {
+      WithdrawalManager.instance = new WithdrawalManager();
+    }
+    return WithdrawalManager.instance;
   }
 
   private getKey(id: string): string {
@@ -76,5 +84,3 @@ export class WithdrawalManager {
     return groups.flatMap((group) => group.requestingWithdrawals.map(({ uuid }) => uuid));
   }
 }
-
-export const withdrawalManager = new WithdrawalManager();

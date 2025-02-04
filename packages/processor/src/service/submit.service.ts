@@ -7,6 +7,7 @@ import {
   calculateEthersIncreasedGasPrice,
   calculateGasMultiplier,
   config,
+  createNetworkClient,
   ethersWaitForTransactionConfirmation,
   executeEthersTransaction,
   getEthersMaxGasMultiplier,
@@ -29,10 +30,11 @@ import {
 import type { SubmitWithdrawalParams } from "../types";
 
 export const submitWithdrawalProof = async (
-  ethereumClient: PublicClient,
-  walletClientData: ReturnType<typeof getWalletClient>,
   params: SubmitWithdrawalParams,
+  walletClientData: ReturnType<typeof getWalletClient>,
 ) => {
+  const ethereumClient = createNetworkClient("scroll");
+
   const retryOptions: RetryOptionsEthers = {
     gasPrice: null,
   };

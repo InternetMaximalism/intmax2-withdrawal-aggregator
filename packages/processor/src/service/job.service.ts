@@ -14,7 +14,7 @@ export const processQueueJob = async (jobData: QueueJobData) => {
   return await timeOperation(async () => await performJob(jobData));
 };
 
-export const performJob = async (data: QueueJobData): Promise<void> => {
+const performJob = async (data: QueueJobData): Promise<void> => {
   const { groupId } = data.payload;
 
   try {

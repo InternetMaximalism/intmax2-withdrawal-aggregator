@@ -43,8 +43,8 @@ export const generateWithdrawalProofs = async (withdrawals: WithdrawalWithProof[
 };
 
 export const generateWrappedProof = async (
-  walletClientData: ReturnType<typeof getWalletClient>,
   withdrawalProofs: WithdrawalProof[],
+  walletClientData: ReturnType<typeof getWalletClient>,
 ) => {
   if (withdrawalProofs.length === 0) {
     throw new Error("No withdrawal proofs available to generate Wrapped proof");

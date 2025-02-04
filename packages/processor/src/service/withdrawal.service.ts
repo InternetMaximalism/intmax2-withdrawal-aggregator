@@ -1,7 +1,6 @@
 import {
   type RequestingWithdrawal,
   WithdrawalStatus,
-  createNetworkClient,
   getWalletClient,
   logger,
   withdrawalPrisma,
@@ -16,14 +15,14 @@ import {
 import { submitWithdrawalProof } from "./submit.service";
 
 export const processWithdrawalGroup = async (requestingWithdrawals: RequestingWithdrawal[]) => {
-  const withdrawals = await fetchWithdrawalsWithProofs(requestingWithdrawals);
   const walletClientData = getWalletClient("withdrawal", "scroll");
 
+  const withdrawals = await fetchWithdrawalsWithProofs(requestingWithdrawals);
   const withdrawalProofs = await generateWithdrawalProofs(withdrawals);
-  const wrappedProof = await generateWrappedProof(walletClientData, withdrawalProofs);
+  const wrappedProof = await generateWrappedProof(withdrawalProofs, walletClientData);
   const gnarkProof = await generateGnarkProof(wrappedProof);
 
-  await submitWithdrawalProofToScroll(walletClientData, withdrawalProofs, gnarkProof);
+  await submitWithdrawalProofToScroll(withdrawalProofs, gnarkProof, walletClientData);
 };
 
 const fetchWithdrawalsWithProofs = async (requestingWithdrawals: RequestingWithdrawal[]) => {
@@ -52,10 +51,10 @@ const fetchWithdrawalsWithProofs = async (requestingWithdrawals: RequestingWithd
   return withdrawals as unknown as WithdrawalWithProof[];
 };
 
-export const submitWithdrawalProofToScroll = async (
-  walletClientData: ReturnType<typeof getWalletClient>,
+const submitWithdrawalProofToScroll = async (
   withdrawalProofs: WithdrawalProof[],
   gnarkProof: GnarkProof,
+  walletClientData: ReturnType<typeof getWalletClient>,
 ) => {
   const lastWithdrawalHash = getLastWithdrawalHashFromWithdrawalProofs(withdrawalProofs);
   const withdrawalAggregator = walletClientData.account.address;
@@ -69,6 +68,5 @@ export const submitWithdrawalProofToScroll = async (
     proof: `0x${gnarkProof.proof}`,
   };
 
-  const ethereumClient = createNetworkClient("scroll");
-  await submitWithdrawalProof(ethereumClient, walletClientData, params);
+  await submitWithdrawalProof(params, walletClientData);
 };

@@ -41,6 +41,16 @@ export const createWrappedProof = async (
   });
 };
 
+export const createGnarkProof = async (wrappedProof: string) => {
+  return makeProverRequest<CreateGnarkProofResponse>({
+    method: "post",
+    path: "gnark-server/start-proof",
+    data: {
+      proof: wrappedProof,
+    },
+  });
+};
+
 export const getWithdrawalProof = async (proofId: string) => {
   return makeProverRequest<GetZKProofResponse<WithdrawalProof>>({
     method: "get",
@@ -52,16 +62,6 @@ export const getWithdrawalWrapperProof = async (proofId: string) => {
   return makeProverRequest<GetZKProofResponse<string>>({
     method: "get",
     path: `aggregator-prover/proof/wrapper/withdrawal/${proofId}`,
-  });
-};
-
-export const createGnarkProof = async (wrappedProof: string) => {
-  return makeProverRequest<CreateGnarkProofResponse>({
-    method: "post",
-    path: "gnark-server/start-proof",
-    data: {
-      proof: wrappedProof,
-    },
   });
 };
 
@@ -80,7 +80,9 @@ const makeProverRequest = async <T>({ method, path, data, params }: ProverReques
     const requestConfig: AxiosRequestConfig = {
       method,
       url: `${config.ZKP_PROVER_URL}/v1/beta/${path}`,
-      ...getHeaders(),
+      headers: {
+        contentType: "application/json",
+      },
     };
 
     if (params) {
@@ -107,12 +109,6 @@ const makeProverRequest = async <T>({ method, path, data, params }: ProverReques
     throw error;
   }
 };
-
-const getHeaders = () => ({
-  headers: {
-    contentType: "application/json",
-  },
-});
 
 const handleAxiosError = (error: unknown) => {
   if (axios.isAxiosError(error)) {

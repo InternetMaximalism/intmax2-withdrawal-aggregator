@@ -1,4 +1,4 @@
-import { type RequestingWithdrawal, config, logger } from "@intmax2-aggregator/shared";
+import { type RequestingWithdrawal, config, logger } from "@intmax2-withdrawal-aggregator/shared";
 import { differenceInMinutes } from "date-fns";
 import { chunkArray } from "../lib/utils";
 import { createWithdrawalGroup, fetchRequestingWithdrawals } from "./withdrawal.service";

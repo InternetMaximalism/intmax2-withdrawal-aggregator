@@ -5,7 +5,7 @@ import {
   getWalletClient,
   logger,
   withdrawalPrisma,
-} from "@intmax2-aggregator/shared";
+} from "@intmax2-withdrawal-aggregator/shared";
 import { formatContractWithdrawal, getLastWithdrawalHashFromWithdrawalProofs } from "../lib/utils";
 import type { GnarkProof, WithdrawalProof, WithdrawalWithProof } from "../types";
 import {

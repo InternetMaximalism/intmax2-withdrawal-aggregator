@@ -6,7 +6,7 @@ import {
   timeOperation,
   withdrawalManager,
   withdrawalPrisma,
-} from "@intmax2-aggregator/shared";
+} from "@intmax2-withdrawal-aggregator/shared";
 import { EXECUTION_REVERTED_ERROR_MESSAGE } from "../constants";
 import { processWithdrawalGroup } from "./withdrawal.service";
 

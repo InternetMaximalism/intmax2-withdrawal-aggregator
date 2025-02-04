@@ -15,7 +15,7 @@ import {
   getWalletClient,
   logger,
   replacedEthersTransaction,
-} from "@intmax2-aggregator/shared";
+} from "@intmax2-withdrawal-aggregator/shared";
 import { ethers } from "ethers";
 import { type Abi, type PublicClient, toHex } from "viem";
 import {

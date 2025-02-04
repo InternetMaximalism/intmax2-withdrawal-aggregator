@@ -1,6 +1,6 @@
-# intmax2-aggregator
+# intmax2-withdrawal-aggregator
 
-The aggregator is responsible for consolidating withdrawals and managing requests to the ZKP (Zero-Knowledge Proof).
+The withdrawal aggregator is responsible for consolidating withdrawals and managing requests to the ZKP (Zero-Knowledge Proof).
 
 ## Development
 

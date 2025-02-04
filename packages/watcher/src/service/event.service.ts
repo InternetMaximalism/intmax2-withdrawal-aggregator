@@ -9,7 +9,7 @@ import {
   fetchEvents,
   logger,
   withdrawalClaimableEvent,
-} from "@intmax2-aggregator/shared";
+} from "@intmax2-withdrawal-aggregator/shared";
 import { parseAbiItem } from "abitype";
 import type { PublicClient } from "viem";
 import { LIQUIDITY_CONTRACT_ADDRESS, LIQUIDITY_CONTRACT_DEPLOYED_BLOCK } from "../constants";

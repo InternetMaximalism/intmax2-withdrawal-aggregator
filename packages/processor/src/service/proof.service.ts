@@ -3,7 +3,7 @@ import {
   getRandomString,
   getWalletClient,
   logger,
-} from "@intmax2-aggregator/shared";
+} from "@intmax2-withdrawal-aggregator/shared";
 import { DEFAULT_ID_LENGTH } from "../constants";
 import { pollGnarkProof, pollWithdrawalProof, pollWithdrawalWrapperProof } from "../lib/poll";
 import { createGnarkProof, createWithdrawalProof, createWrappedProof } from "../lib/zkp";

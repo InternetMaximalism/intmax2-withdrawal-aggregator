@@ -2,7 +2,7 @@
   "name": "processor",
   "version": "1.0.0",
   "dependencies": {
-    "@intmax2-aggregator/shared": "workspace:*",
+    "@intmax2-withdrawal-aggregator/shared": "workspace:*",
     "axios": "^1.7.9",
     "ethers": "^6.13.5"
   },

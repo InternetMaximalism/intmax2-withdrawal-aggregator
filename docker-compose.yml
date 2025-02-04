@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:15.10
-    container_name: intmax2-aggregator-postgres
+    container_name: intmax2-withdrawal-aggregator-postgres
     hostname: postgres
     restart: unless-stopped
     environment:
@@ -15,7 +15,7 @@ services:
 
   redis:
     image: redis:7.4.2
-    container_name: intmax2-aggregator-redis
+    container_name: intmax2-withdrawal-aggregator-redis
     hostname: redis
     restart: unless-stopped
     ports:

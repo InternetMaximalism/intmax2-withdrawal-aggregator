@@ -278,9 +278,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@intmax2-aggregator/shared@workspace:*, @intmax2-aggregator/shared@workspace:packages/shared":
+"@intmax2-withdrawal-aggregator/shared@workspace:*, @intmax2-withdrawal-aggregator/shared@workspace:packages/shared":
   version: 0.0.0-use.local
-  resolution: "@intmax2-aggregator/shared@workspace:packages/shared"
+  resolution: "@intmax2-withdrawal-aggregator/shared@workspace:packages/shared"
   dependencies:
     "@types/bull": "npm:^4.10.4"
     abitype: "npm:^1.0.8"
@@ -762,7 +762,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "collector@workspace:packages/collector"
   dependencies:
-    "@intmax2-aggregator/shared": "workspace:*"
+    "@intmax2-withdrawal-aggregator/shared": "workspace:*"
     date-fns: "npm:^4.1.0"
     tsx: "npm:^4.19.2"
     typescript: "npm:^5.7.3"
@@ -1227,9 +1227,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"intmax2-aggregator@workspace:.":
+"intmax2-withdrawal-aggregator@workspace:.":
   version: 0.0.0-use.local
-  resolution: "intmax2-aggregator@workspace:."
+  resolution: "intmax2-withdrawal-aggregator@workspace:."
   dependencies:
     "@biomejs/biome": "npm:1.9.4"
     "@prisma/client": "npm:6.2.1"
@@ -1774,7 +1774,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "processor@workspace:packages/processor"
   dependencies:
-    "@intmax2-aggregator/shared": "workspace:*"
+    "@intmax2-withdrawal-aggregator/shared": "workspace:*"
     axios: "npm:^1.7.9"
     ethers: "npm:^6.13.5"
     tsx: "npm:^4.19.2"
@@ -2159,7 +2159,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "watcher@workspace:packages/watcher"
   dependencies:
-    "@intmax2-aggregator/shared": "workspace:*"
+    "@intmax2-withdrawal-aggregator/shared": "workspace:*"
     tsx: "npm:^4.19.2"
     typescript: "npm:^5.7.3"
   languageName: unknown

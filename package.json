@@ -1,12 +1,12 @@
 {
-  "name": "intmax2-aggregator",
+  "name": "intmax2-withdrawal-aggregator",
   "version": "1.2.7",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "build": "yarn workspaces foreach --all --topological run build",
-    "build:shared": "yarn workspace @intmax2-aggregator/shared run build",
+    "build:shared": "yarn workspace @intmax2-withdrawal-aggregator/shared run build",
     "build:parallel": "yarn workspaces foreach --all -pt run build",
     "lint": "biome lint .",
     "format": "biome check --write --unsafe .",

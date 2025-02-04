@@ -7,7 +7,7 @@ import {
   logger,
   withdrawalManager,
   withdrawalPrisma,
-} from "@intmax2-aggregator/shared";
+} from "@intmax2-withdrawal-aggregator/shared";
 
 export const fetchRequestingWithdrawals = async () => {
   const processedUUIDs = await withdrawalManager.getAllProcessedUUIDs();
@@ -32,8 +32,8 @@ export const fetchRequestingWithdrawals = async () => {
 };
 
 export const createWithdrawalGroup = async (group: RequestingWithdrawal[]) => {
-  const now = new Date();
   const queueManager = QueueManager.getInstance("withdrawal-aggregator");
+  const now = new Date();
 
   const groupId = await withdrawalManager.addGroup({
     requestingWithdrawals: group.map((withdrawal) => ({

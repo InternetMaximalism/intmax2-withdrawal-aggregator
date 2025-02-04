@@ -7,6 +7,7 @@ import {
   calculateEthersIncreasedGasPrice,
   calculateGasMultiplier,
   config,
+  createNetworkClient,
   ethersWaitForTransactionConfirmation,
   executeEthersTransaction,
   getEthersMaxGasMultiplier,
@@ -15,7 +16,7 @@ import {
   getWalletClient,
   logger,
   replacedEthersTransaction,
-} from "@intmax2-aggregator/shared";
+} from "@intmax2-withdrawal-aggregator/shared";
 import { ethers } from "ethers";
 import { type Abi, type PublicClient, toHex } from "viem";
 import {
@@ -29,10 +30,11 @@ import {
 import type { SubmitWithdrawalParams } from "../types";
 
 export const submitWithdrawalProof = async (
-  ethereumClient: PublicClient,
+  params: SubmitWithdrawalParams,
   walletClientData: ReturnType<typeof getWalletClient>,
-  parmas: SubmitWithdrawalParams,
 ) => {
+  const ethereumClient = createNetworkClient("scroll");
+
   const retryOptions: RetryOptionsEthers = {
     gasPrice: null,
   };
@@ -44,7 +46,7 @@ export const submitWithdrawalProof = async (
       const { transactionHash } = await submitWithdrawalProofWithRetry(
         ethereumClient,
         walletClientData,
-        parmas,
+        params,
         multiplier,
         retryOptions,
       );

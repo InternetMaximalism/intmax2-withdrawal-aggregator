@@ -1,4 +1,4 @@
-import { createNetworkClient, eventPrisma } from "@intmax2-aggregator/shared";
+import { createNetworkClient, eventPrisma } from "@intmax2-withdrawal-aggregator/shared";
 import { WITHDRAWAL_EVENT_NAMES } from "../types";
 import { handleAllWithdrawalEvents } from "./event.service";
 import { batchUpdateWithdrawalStatusTransactions } from "./withdrawal.service";

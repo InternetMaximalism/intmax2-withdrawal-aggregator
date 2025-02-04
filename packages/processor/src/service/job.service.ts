@@ -6,7 +6,7 @@ import {
   timeOperation,
   withdrawalManager,
   withdrawalPrisma,
-} from "@intmax2-aggregator/shared";
+} from "@intmax2-withdrawal-aggregator/shared";
 import { EXECUTION_REVERTED_ERROR_MESSAGE } from "../constants";
 import { processWithdrawalGroup } from "./withdrawal.service";
 
@@ -14,7 +14,7 @@ export const processQueueJob = async (jobData: QueueJobData) => {
   return await timeOperation(async () => await performJob(jobData));
 };
 
-export const performJob = async (data: QueueJobData): Promise<void> => {
+const performJob = async (data: QueueJobData): Promise<void> => {
   const { groupId } = data.payload;
 
   try {

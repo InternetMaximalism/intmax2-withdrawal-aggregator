@@ -1,4 +1,4 @@
-import { cleanup, logger } from "@intmax2-aggregator/shared";
+import { cleanup, logger } from "@intmax2-withdrawal-aggregator/shared";
 
 let isShuttingDown = false;
 

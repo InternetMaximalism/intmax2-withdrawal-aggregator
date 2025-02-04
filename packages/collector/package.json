@@ -2,7 +2,7 @@
   "name": "collector",
   "version": "1.0.0",
   "dependencies": {
-    "@intmax2-aggregator/shared": "workspace:*",
+    "@intmax2-withdrawal-aggregator/shared": "workspace:*",
     "date-fns": "^4.1.0"
   },
   "scripts": {

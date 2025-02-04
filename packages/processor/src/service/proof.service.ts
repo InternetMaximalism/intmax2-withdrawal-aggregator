@@ -3,7 +3,7 @@ import {
   getRandomString,
   getWalletClient,
   logger,
-} from "@intmax2-aggregator/shared";
+} from "@intmax2-withdrawal-aggregator/shared";
 import { DEFAULT_ID_LENGTH } from "../constants";
 import { pollGnarkProof, pollWithdrawalProof, pollWithdrawalWrapperProof } from "../lib/poll";
 import { createGnarkProof, createWithdrawalProof, createWrappedProof } from "../lib/zkp";
@@ -43,8 +43,8 @@ export const generateWithdrawalProofs = async (withdrawals: WithdrawalWithProof[
 };
 
 export const generateWrappedProof = async (
-  walletClientData: ReturnType<typeof getWalletClient>,
   withdrawalProofs: WithdrawalProof[],
+  walletClientData: ReturnType<typeof getWalletClient>,
 ) => {
   if (withdrawalProofs.length === 0) {
     throw new Error("No withdrawal proofs available to generate Wrapped proof");

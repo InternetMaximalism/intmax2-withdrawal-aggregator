@@ -11,7 +11,6 @@ export const DEFAULT_POLL_OPTIONS: Required<PollOptions> = {
 };
 
 // transaction
-export const REPLACED_TX_WAIT_TIMEOUT = 15_000;
 export const WAIT_TRANSACTION_TIMEOUT = 15_000;
 export const TRANSACTION_MAX_RETRIES = 5;
 

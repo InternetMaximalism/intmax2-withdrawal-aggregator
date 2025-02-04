@@ -1,4 +1,4 @@
-import { cleanup, logger, timeOperation } from "@intmax2-aggregator/shared";
+import { cleanup, logger, timeOperation } from "@intmax2-withdrawal-aggregator/shared";
 import { name } from "../package.json";
 import { performJob } from "./service/job.service";
 

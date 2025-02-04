@@ -1,6 +1,6 @@
 {
   "name": "intmax2-withdrawal-aggregator",
-  "version": "1.2.7",
+  "version": "0.1.0",
   "workspaces": [
     "packages/*"
   ],

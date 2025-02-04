@@ -1,12 +1,14 @@
-import Queue, { Job, JobOptions, QueueOptions, Queue as QueueType } from "bull";
+import Queue, { Job, type JobOptions, type QueueOptions, Queue as QueueType } from "bull";
 import { config } from "../config";
 import { logger } from "../lib";
 
 type JobType = "processBatch";
 type QueueNameType = "withdrawal-aggregator";
-type JobPayload = {
+
+interface JobPayload {
   groupId: string;
-};
+}
+
 export interface QueueJobData {
   type: JobType;
   payload: JobPayload;

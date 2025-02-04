@@ -75,19 +75,6 @@ export class WithdrawalManager {
     const groups = await this.getAllGroups();
     return groups.flatMap((group) => group.requestingWithdrawals.map(({ uuid }) => uuid));
   }
-
-  async deleteAllGroups(): Promise<void> {
-    const ids = await this.redis.zrange(this.groupSetKey, 0, -1);
-    const pipeline = this.redis.pipeline();
-
-    for (const id of ids) {
-      pipeline.del(this.getKey(id));
-    }
-
-    pipeline.del(this.groupSetKey);
-
-    await pipeline.exec();
-  }
 }
 
 export const withdrawalManager = new WithdrawalManager();

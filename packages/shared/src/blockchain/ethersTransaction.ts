@@ -1,13 +1,12 @@
 import { ethers } from "ethers";
 import type { PublicClient } from "viem";
 import { logger } from "../lib/logger";
-import type { ContractCallOptionsEthers, ContractCallParameters } from "../types";
-
-interface EthersTransactionExecutionParams {
-  functionName: string;
-  contract: any;
-  callArgs: any;
-}
+import type {
+  ContractCallOptionsEthers,
+  ContractCallParameters,
+  EthersTransactionExecutionParams,
+  WaitForTransactionOptions,
+} from "../types";
 
 export const getEthersTxOptions = (
   contractCallParams: ContractCallParameters,
@@ -95,11 +94,6 @@ export const replacedEthersTransaction = async ({
     throw error;
   }
 };
-
-interface WaitForTransactionOptions {
-  confirms?: number;
-  timeout?: number;
-}
 
 const DEFAULT_OPTIONS: Required<WaitForTransactionOptions> = {
   confirms: 1,

@@ -31,7 +31,7 @@ import type { SubmitWithdrawalParams } from "../types";
 export const submitWithdrawalProof = async (
   ethereumClient: PublicClient,
   walletClientData: ReturnType<typeof getWalletClient>,
-  parmas: SubmitWithdrawalParams,
+  params: SubmitWithdrawalParams,
 ) => {
   const retryOptions: RetryOptionsEthers = {
     gasPrice: null,
@@ -44,7 +44,7 @@ export const submitWithdrawalProof = async (
       const { transactionHash } = await submitWithdrawalProofWithRetry(
         ethereumClient,
         walletClientData,
-        parmas,
+        params,
         multiplier,
         retryOptions,
       );

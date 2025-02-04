@@ -7,12 +7,13 @@ import {
   claimedWithdrawalEvent,
   directWithdrawalSuccessedEvent,
   fetchEvents,
-  logger,
   withdrawalClaimableEvent,
+  LIQUIDITY_CONTRACT_ADDRESS,
+  LIQUIDITY_CONTRACT_DEPLOYED_BLOCK,
+  validateBlockRange,
 } from "@intmax2-withdrawal-aggregator/shared";
 import { parseAbiItem } from "abitype";
 import type { PublicClient } from "viem";
-import { LIQUIDITY_CONTRACT_ADDRESS, LIQUIDITY_CONTRACT_DEPLOYED_BLOCK } from "../constants";
 import type { WithdrawalEventType } from "../types";
 
 const handleWithdrawalEvent = async <T extends { args: { withdrawalHash: string } }>(
@@ -24,23 +25,16 @@ const handleWithdrawalEvent = async <T extends { args: { withdrawalHash: string 
     eventName: WithdrawalEventType;
   },
 ) => {
-  const { startBlockNumber, endBlockNumber } = params;
-  logger.info(
-    `Fetching ${params.eventName} events from block ${startBlockNumber} to ${endBlockNumber}`,
-  );
+  const { eventName, eventInterface, startBlockNumber, endBlockNumber } = params;
 
-  if (startBlockNumber > endBlockNumber) {
-    throw new Error(
-      `startBlockNumber ${startBlockNumber} is greater than currentBlockNumber ${endBlockNumber}`,
-    );
-  }
+  validateBlockRange(eventName, startBlockNumber, endBlockNumber);
 
   const events = await fetchEvents<T>(ethereumClient, {
     startBlockNumber,
     endBlockNumber,
     blockRange: BLOCK_RANGE_MINIMUM,
     contractAddress: LIQUIDITY_CONTRACT_ADDRESS,
-    eventInterface: params.eventInterface,
+    eventInterface,
   });
 
   return events.map((log) => ({

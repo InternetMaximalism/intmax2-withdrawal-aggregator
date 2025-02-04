@@ -32,8 +32,8 @@ export const fetchRequestingWithdrawals = async () => {
 };
 
 export const createWithdrawalGroup = async (group: RequestingWithdrawal[]) => {
-  const now = new Date();
   const queueManager = QueueManager.getInstance("withdrawal-aggregator");
+  const now = new Date();
 
   const groupId = await withdrawalManager.addGroup({
     requestingWithdrawals: group.map((withdrawal) => ({

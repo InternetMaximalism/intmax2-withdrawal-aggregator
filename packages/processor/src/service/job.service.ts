@@ -1,10 +1,10 @@
 import {
   type QueueJobData,
   WithdrawalGroupStatus,
+  WithdrawalManager,
   WithdrawalStatus,
   logger,
   timeOperation,
-  WithdrawalManager,
   withdrawalPrisma,
 } from "@intmax2-withdrawal-aggregator/shared";
 import { EXECUTION_REVERTED_ERROR_MESSAGE } from "../constants";

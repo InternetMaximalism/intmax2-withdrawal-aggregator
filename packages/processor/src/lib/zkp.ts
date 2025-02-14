@@ -44,7 +44,7 @@ export const createWrappedProof = async (
 export const createGnarkProof = async (wrappedProof: string) => {
   return makeProverRequest<CreateGnarkProofResponse>({
     method: "post",
-    path: "gnark-server/start-proof",
+    path: "withdrawal-gnark-server/start-proof",
     data: {
       proof: wrappedProof,
     },
@@ -68,7 +68,7 @@ export const getWithdrawalWrapperProof = async (proofId: string) => {
 export const getGnarkProof = async (jobId: string) => {
   return makeProverRequest<GetZKProofResponse<GnarkProof>>({
     method: "get",
-    path: `gnark-server/get-proof`,
+    path: `withdrawal-gnark-server/get-proof`,
     params: {
       jobId,
     },

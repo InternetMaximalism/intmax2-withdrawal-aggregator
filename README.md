@@ -33,7 +33,7 @@ yarn workspace watcher dev
 # migrate dev
 yarn migrate
 
-# deploy
+# migration prod
 yarn migrate:deploy
 
 # reset

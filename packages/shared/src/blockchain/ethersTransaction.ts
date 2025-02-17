@@ -8,6 +8,11 @@ import type {
   WaitForTransactionOptions,
 } from "../types";
 
+const DEFAULT_OPTIONS: Required<WaitForTransactionOptions> = {
+  confirms: 1,
+  timeout: 30_000,
+};
+
 export const getEthersTxOptions = (
   contractCallParams: ContractCallParameters,
   contractCallOptions: ContractCallOptionsEthers,
@@ -93,11 +98,6 @@ export const replacedEthersTransaction = async ({
 
     throw error;
   }
-};
-
-const DEFAULT_OPTIONS: Required<WaitForTransactionOptions> = {
-  confirms: 1,
-  timeout: 30_000,
 };
 
 export const ethersWaitForTransactionConfirmation = async (

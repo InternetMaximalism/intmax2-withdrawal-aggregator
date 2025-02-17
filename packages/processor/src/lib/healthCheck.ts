@@ -1,4 +1,4 @@
-import http from "http";
+import http from "node:http";
 import { config, logger } from "@intmax2-withdrawal-aggregator/shared";
 import { name } from "../../package.json";
 

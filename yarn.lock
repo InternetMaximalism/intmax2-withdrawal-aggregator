@@ -2197,8 +2197,10 @@ __metadata:
   resolution: "watcher@workspace:packages/watcher"
   dependencies:
     "@intmax2-withdrawal-aggregator/shared": "workspace:*"
+    abitype: "npm:^1.0.8"
     tsx: "npm:^4.19.2"
     typescript: "npm:^5.7.3"
+    viem: "npm:^2.23.2"
   languageName: unknown
   linkType: soft
 

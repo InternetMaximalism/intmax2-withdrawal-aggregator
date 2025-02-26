@@ -28,8 +28,9 @@ export class QueueManager {
   };
 
   constructor(queueName: QueueNameType, options?: QueueOptions) {
+    const redisUrl = this.getRedisURL();
     const defaultOptions: QueueOptions = {};
-    this.queue = new Queue<QueueJobData>(queueName, config.REDIS_URL, {
+    this.queue = new Queue<QueueJobData>(queueName, redisUrl, {
       ...defaultOptions,
       ...options,
     });
@@ -45,6 +46,16 @@ export class QueueManager {
     this.queue.on("failed", (job: Job, error: Error) => {
       logger.error(`Job ${job.id} failed: ${error.message}`);
     });
+  }
+
+  private getRedisURL(): string {
+    const hasQueryParams = config.REDIS_URL.includes("?");
+
+    if (config.REDIS_URL.includes("rediss")) {
+      return hasQueryParams ? `${config.REDIS_URL}&tls=true` : `${config.REDIS_URL}?tls=true`;
+    }
+
+    return config.REDIS_URL;
   }
 
   public static getInstance(queueName: QueueNameType) {

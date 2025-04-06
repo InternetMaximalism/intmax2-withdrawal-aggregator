@@ -29,6 +29,8 @@ yarn workspace watcher dev
 
 ## Migration
 
+Note: Migration is handled within the Claim Aggregator. Please execute these commands inside the Claim Aggregator project.
+
 ```sh
 # migrate dev
 yarn migrate

@@ -56,4 +56,8 @@ docker compose -f ./docker-compose.yml up postgres -d
 
 # all reset
 docker compose down -v
+
+# build and run
+docker build -f docker/Dockerfile -t intmax2-withdrawal-aggregator .
+docker run --rm -p 3000:3000 --env-file .env intmax2-withdrawal-aggregator workspace collector start
 ```

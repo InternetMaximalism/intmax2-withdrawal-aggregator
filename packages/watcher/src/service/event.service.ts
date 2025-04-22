@@ -4,7 +4,7 @@ import {
   type DirectWithdrawalSuccessedEvent,
   type Event,
   LIQUIDITY_CONTRACT_ADDRESS,
-  LIQUIDITY_CONTRACT_DEPLOYED_BLOCK,
+  LIQUIDITY_CONTRACT_DEPLOYED_BLOCK_NUMBER,
   type WithdrawalClaimableEvent,
   claimedWithdrawalEvent,
   directWithdrawalSuccessedEvent,
@@ -81,7 +81,7 @@ export const getLastProcessedBlockNumberByEventName = (
 ) => {
   const filteredEvents = events.filter((event) => event.name === eventName);
   if (filteredEvents.length === 0) {
-    return LIQUIDITY_CONTRACT_DEPLOYED_BLOCK;
+    return LIQUIDITY_CONTRACT_DEPLOYED_BLOCK_NUMBER;
   }
 
   const lastEvent = filteredEvents.reduce((prev, current) => {

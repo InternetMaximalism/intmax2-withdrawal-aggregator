@@ -2,11 +2,12 @@ import {
   type QueueJobData,
   WithdrawalGroupStatus,
   WithdrawalManager,
-  WithdrawalStatus,
   logger,
   timeOperation,
-  withdrawalPrisma,
+  withdrawalDB,
+  withdrawalSchema,
 } from "@intmax2-withdrawal-aggregator/shared";
+import { inArray } from "drizzle-orm";
 import { EXECUTION_REVERTED_ERROR_MESSAGE } from "../constants";
 import { processWithdrawalGroup } from "./withdrawal.service";
 
@@ -31,16 +32,17 @@ const performJob = async (data: QueueJobData): Promise<void> => {
 
     await processWithdrawalGroup(group.requestingWithdrawals);
 
-    await withdrawalPrisma.withdrawal.updateMany({
-      where: {
-        uuid: {
-          in: group.requestingWithdrawals.map((withdrawal) => withdrawal.uuid),
-        },
-      },
-      data: {
-        status: WithdrawalStatus.relayed,
-      },
-    });
+    await withdrawalDB
+      .update(withdrawalSchema)
+      .set({
+        status: "relayed",
+      })
+      .where(
+        inArray(
+          withdrawalSchema.uuid,
+          group.requestingWithdrawals.map((withdrawal) => withdrawal.uuid),
+        ),
+      );
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
 
@@ -50,16 +52,17 @@ const performJob = async (data: QueueJobData): Promise<void> => {
       logger.warn(`Marking all withdrawals in group ${groupId} as failed`);
 
       const group = await withdrawalManager.getGroup(groupId);
-      await withdrawalPrisma.withdrawal.updateMany({
-        where: {
-          uuid: {
-            in: group!.requestingWithdrawals.map((withdrawal) => withdrawal.uuid),
-          },
-        },
-        data: {
-          status: WithdrawalStatus.failed,
-        },
-      });
+      await withdrawalDB
+        .update(withdrawalSchema)
+        .set({
+          status: "failed",
+        })
+        .where(
+          inArray(
+            withdrawalSchema.uuid,
+            group!.requestingWithdrawals.map((withdrawal) => withdrawal.uuid),
+          ),
+        );
     }
   } finally {
     await withdrawalManager.deleteGroup(groupId);

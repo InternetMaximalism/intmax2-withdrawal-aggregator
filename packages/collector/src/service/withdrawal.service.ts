@@ -3,30 +3,27 @@ import {
   type RequestingWithdrawal,
   WithdrawalGroupStatus,
   WithdrawalManager,
-  WithdrawalPrisma,
-  WithdrawalStatus,
   logger,
-  withdrawalPrisma,
+  withdrawalDB,
+  withdrawalSchema,
 } from "@intmax2-withdrawal-aggregator/shared";
+import { and, asc, eq, notInArray } from "drizzle-orm";
 
 export const fetchRequestingWithdrawals = async () => {
   const processedUUIDs = await WithdrawalManager.getInstance().getAllProcessedUUIDs();
-
-  const requestingWithdrawals = await withdrawalPrisma.withdrawal.findMany({
-    select: {
-      uuid: true,
-      createdAt: true,
-    },
-    where: {
-      status: WithdrawalStatus.requested,
-      uuid: {
-        notIn: processedUUIDs,
-      },
-    },
-    orderBy: {
-      createdAt: WithdrawalPrisma.SortOrder.asc,
-    },
-  });
+  const requestingWithdrawals = await withdrawalDB
+    .select({
+      uuid: withdrawalSchema.uuid,
+      createdAt: withdrawalSchema.createdAt,
+    })
+    .from(withdrawalSchema)
+    .where(
+      and(
+        eq(withdrawalSchema.status, "requested"),
+        notInArray(withdrawalSchema.uuid, processedUUIDs),
+      ),
+    )
+    .orderBy(asc(withdrawalSchema.createdAt));
 
   return requestingWithdrawals;
 };

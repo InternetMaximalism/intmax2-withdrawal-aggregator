@@ -23,7 +23,6 @@ COPY --chown=builduser:builduser packages ./packages/
 RUN yarn install --immutable
 
 COPY --chown=builduser:builduser tsconfig.json ./
-COPY --chown=builduser:builduser prisma ./prisma
 
 RUN yarn generate
 RUN yarn build
@@ -68,9 +67,7 @@ RUN addgroup --system --gid 1001 appuser && \
 WORKDIR /app
 
 COPY --chown=appuser:appuser --from=builder /app/package.json /app/yarn.lock ./
-COPY --chown=appuser:appuser --from=builder /app/prisma ./prisma
 COPY --chown=appuser:appuser --from=builder /app/packages ./packages/
-COPY --chown=appuser:appuser --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 RUN find /app -type d -exec chmod 755 {} \; && \
     find /app -type f -exec chmod 644 {} \;

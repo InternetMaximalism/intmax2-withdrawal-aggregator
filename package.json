@@ -11,23 +11,15 @@
     "lint": "biome lint .",
     "format": "biome check --write --unsafe .",
     "check": "biome check .",
-    "migrate": "prisma migrate dev --schema=./prisma/schema.event.prisma",
-    "migrate:deploy": "prisma migrate deploy --schema=./prisma/schema.event.prisma",
-    "generate:withdrawal": "prisma generate --schema=./prisma/schema.withdrawal.prisma",
-    "generate:event": "prisma generate --schema=./prisma/schema.event.prisma",
-    "generate": "yarn generate:withdrawal && yarn generate:event",
-    "reset": "prisma migrate reset --schema=./prisma/schema.event.prisma"
+    "generate:withdrawal": "npx drizzle-kit generate --config=./drizzle.config.withdrawal.ts",
+    "generate:event": "npx drizzle-kit generate --config=./drizzle.config.event.ts",
+    "migrate:withdrawal": "npx drizzle-kit migrate --config=./drizzle.config.withdrawal.ts",
+    "migrate:event": "npx drizzle-kit migrate --config=./drizzle.config.event.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "prisma": "^6.6.0",
+    "drizzle-kit": "^0.31.0",
     "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    "@prisma/client": "6.6.0"
-  },
-  "prisma": {
-    "seed": "tsx --env-file=./.env prisma/seed.ts"
   },
   "packageManager": "yarn@4.9.1"
 }

@@ -41,7 +41,7 @@ const shouldProcessWithdrawals = (
   const isOldEnough = minutesSinceOldestWithdrawal >= config.WITHDRAWAL_MIN_WAIT_MINUTES;
 
   logger.info(
-    `shouldProcessWithdrawals hasEnoughWithdrawals: ${hasEnoughWithdrawals} isOldEnough: ${isOldEnough}`,
+    `requestingWithdrawals: ${requestingWithdrawals.length} hasEnoughWithdrawals: ${hasEnoughWithdrawals} isOldEnough: ${isOldEnough}`,
   );
 
   return hasEnoughWithdrawals || isOldEnough;

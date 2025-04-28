@@ -901,6 +901,7 @@ __metadata:
   dependencies:
     "@intmax2-withdrawal-aggregator/shared": "workspace:*"
     date-fns: "npm:^4.1.0"
+    drizzle-orm: "npm:^0.43.1"
     tsx: "npm:^4.19.3"
     typescript: "npm:^5.8.3"
   languageName: unknown

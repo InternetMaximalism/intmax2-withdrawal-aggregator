@@ -32,6 +32,12 @@ yarn workspace watcher dev
 Note: Migration is handled within the Claim Aggregator. Please execute these commands inside the Claim Aggregator project.
 
 ```sh
+# create db
+docker exec -it intmax2-withdrawal-aggregator-postgres psql -U postgres -d maindb
+CREATE DATABASE event;
+CREATE DATABASE withdrawal;
+
+# migration
 yarn generate:event
 yarn migrate:event
 ```

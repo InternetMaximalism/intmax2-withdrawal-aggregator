@@ -2,12 +2,12 @@ import {
   BLOCK_RANGE_MINIMUM,
   type ClaimedWithdrawalEvent,
   type DirectWithdrawalSuccessedEvent,
-  type Event,
   LIQUIDITY_CONTRACT_ADDRESS,
   LIQUIDITY_CONTRACT_DEPLOYED_BLOCK_NUMBER,
   type WithdrawalClaimableEvent,
   claimedWithdrawalEvent,
   directWithdrawalSuccessedEvent,
+  eventSchema,
   fetchEvents,
   validateBlockRange,
   withdrawalClaimableEvent,
@@ -45,7 +45,7 @@ const handleWithdrawalEvent = async <T extends { args: { withdrawalHash: string 
 export const handleAllWithdrawalEvents = async (
   ethereumClient: PublicClient,
   currentBlockNumber: bigint,
-  events: Event[],
+  events: (typeof eventSchema.$inferSelect)[],
 ) => {
   const [directWithdrawals, claimableWithdrawals, claimedWithdrawals] = await Promise.all([
     handleWithdrawalEvent<DirectWithdrawalSuccessedEvent>(ethereumClient, {
@@ -76,7 +76,7 @@ export const handleAllWithdrawalEvents = async (
 };
 
 export const getLastProcessedBlockNumberByEventName = (
-  events: Event[],
+  events: (typeof eventSchema.$inferSelect)[],
   eventName: WithdrawalEventType,
 ) => {
   const filteredEvents = events.filter((event) => event.name === eventName);

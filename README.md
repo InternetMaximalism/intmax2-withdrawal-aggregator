@@ -32,14 +32,8 @@ yarn workspace watcher dev
 Note: Migration is handled within the Claim Aggregator. Please execute these commands inside the Claim Aggregator project.
 
 ```sh
-# migrate dev
-yarn migrate
-
-# migration prod
-yarn migrate:deploy
-
-# reset
-yarn reset
+yarn generate:event
+yarn migrate:event
 ```
 
 ## Docker

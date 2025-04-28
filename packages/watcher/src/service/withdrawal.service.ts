@@ -2,23 +2,25 @@ import {
   type WithdrawalEventLog,
   WithdrawalStatus,
   logger,
-  withdrawalPrisma,
+  withdrawalDB,
+  withdrawalSchema,
 } from "@intmax2-withdrawal-aggregator/shared";
-import type { WithdrawalEventType } from "../types";
+import { and, eq, inArray } from "drizzle-orm";
+import type { Transaction, TransactionType, WithdrawalEventType } from "../types";
 
 export const batchUpdateWithdrawalStatusTransactions = async (
   directWithdrawals: WithdrawalEventLog[],
   claimableWithdrawals: WithdrawalEventLog[],
   claimedWithdrawals: WithdrawalEventLog[],
 ) => {
-  const transactions = [];
+  const transactions: Transaction[] = [];
 
   if (directWithdrawals.length > 0) {
     transactions.push(
       batchUpdateWithdrawalStatus(
         directWithdrawals,
-        WithdrawalStatus.relayed,
-        WithdrawalStatus.success,
+        "relayed",
+        "success",
         "DirectWithdrawalSuccessed",
       ),
     );
@@ -28,8 +30,8 @@ export const batchUpdateWithdrawalStatusTransactions = async (
     transactions.push(
       batchUpdateWithdrawalStatus(
         claimableWithdrawals,
-        WithdrawalStatus.relayed,
-        WithdrawalStatus.need_claim,
+        "relayed",
+        "need_claim",
         "WithdrawalClaimable",
       ),
     );
@@ -37,12 +39,7 @@ export const batchUpdateWithdrawalStatusTransactions = async (
 
   if (claimedWithdrawals.length > 0) {
     transactions.push(
-      batchUpdateWithdrawalStatus(
-        claimedWithdrawals,
-        WithdrawalStatus.need_claim,
-        WithdrawalStatus.success,
-        "ClaimedWithdrawal",
-      ),
+      batchUpdateWithdrawalStatus(claimedWithdrawals, "need_claim", "success", "ClaimedWithdrawal"),
     );
   }
 
@@ -51,7 +48,11 @@ export const batchUpdateWithdrawalStatusTransactions = async (
   }
 
   if (transactions.length > 0) {
-    await withdrawalPrisma.$transaction(transactions);
+    await withdrawalDB.transaction(async (tx) => {
+      for (const transaction of transactions) {
+        await transaction(tx);
+      }
+    });
   }
 };
 
@@ -61,23 +62,29 @@ const batchUpdateWithdrawalStatus = (
   nextStatus: WithdrawalStatus,
   type: WithdrawalEventType,
 ) => {
-  logger.info(
-    `Batch update withdrawal status: ${nextStatus} for ${withdrawalEventLogs.length} ${type} withdrawals`,
-  );
-  const data = {
-    status: nextStatus,
-    ...((type === "DirectWithdrawalSuccessed" || type === "WithdrawalClaimable") && {
-      singleWithdrawalProof: null,
-    }),
-  };
+  return async (tx: TransactionType) => {
+    logger.info(
+      `Batch update withdrawal status: ${nextStatus} for ${withdrawalEventLogs.length} ${type} withdrawals`,
+    );
 
-  return withdrawalPrisma.withdrawal.updateMany({
-    where: {
-      withdrawalHash: {
-        in: withdrawalEventLogs.map(({ withdrawalHash }) => withdrawalHash),
-      },
-      status: previousStatus,
-    },
-    data,
-  });
+    const data = {
+      status: nextStatus,
+      ...((type === "DirectWithdrawalSuccessed" || type === "WithdrawalClaimable") && {
+        singleWithdrawalProof: null,
+      }),
+    };
+
+    await tx
+      .update(withdrawalSchema)
+      .set(data)
+      .where(
+        and(
+          inArray(
+            withdrawalSchema.withdrawalHash,
+            withdrawalEventLogs.map(({ withdrawalHash }) => withdrawalHash),
+          ),
+          eq(withdrawalSchema.status, previousStatus),
+        ),
+      );
+  };
 };

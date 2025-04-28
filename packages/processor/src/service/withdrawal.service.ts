@@ -1,10 +1,11 @@
 import {
   type RequestingWithdrawal,
-  WithdrawalStatus,
   getWalletClient,
   logger,
-  withdrawalPrisma,
+  withdrawalDB,
+  withdrawalSchema,
 } from "@intmax2-withdrawal-aggregator/shared";
+import { and, eq, inArray } from "drizzle-orm";
 import { formatContractWithdrawal, getLastWithdrawalHashFromWithdrawalProofs } from "../lib/utils";
 import type { GnarkProof, WithdrawalProof, WithdrawalWithProof } from "../types";
 import {
@@ -28,19 +29,19 @@ export const processWithdrawalGroup = async (requestingWithdrawals: RequestingWi
 const fetchWithdrawalsWithProofs = async (requestingWithdrawals: RequestingWithdrawal[]) => {
   const requestingWithdrawalUUIDs = requestingWithdrawals.map((withdrawal) => withdrawal.uuid);
 
-  const withdrawals = await withdrawalPrisma.withdrawal.findMany({
-    select: {
-      uuid: true,
-      singleWithdrawalProof: true,
-      withdrawalHash: true,
-    },
-    where: {
-      uuid: {
-        in: requestingWithdrawalUUIDs,
-      },
-      status: WithdrawalStatus.requested,
-    },
-  });
+  const withdrawals = await withdrawalDB
+    .select({
+      uuid: withdrawalSchema.uuid,
+      singleWithdrawalProof: withdrawalSchema.singleWithdrawalProof,
+      withdrawalHash: withdrawalSchema.withdrawalHash,
+    })
+    .from(withdrawalSchema)
+    .where(
+      and(
+        inArray(withdrawalSchema.uuid, requestingWithdrawalUUIDs),
+        eq(withdrawalSchema.status, "requested"),
+      ),
+    );
 
   if (withdrawals.length !== requestingWithdrawalUUIDs.length) {
     logger.warn(

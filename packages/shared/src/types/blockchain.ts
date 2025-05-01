@@ -3,6 +3,7 @@ export interface BaseEvent {
   address: string;
   blockNumber: bigint;
   blockTimestamp: string;
+  transactionHash: string;
 }
 
 export interface DirectWithdrawalSuccessedEvent extends BaseEvent {
@@ -11,6 +12,7 @@ export interface DirectWithdrawalSuccessedEvent extends BaseEvent {
 
 export interface WithdrawalEventLog {
   withdrawalHash: string;
+  transactionHash: string;
 }
 
 export interface DirectWithdrawalSuccessedEventLog extends WithdrawalEventLog {

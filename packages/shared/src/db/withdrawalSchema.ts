@@ -16,6 +16,7 @@ export const withdrawalSchema = table(
     withdrawalHash: t.varchar("withdrawal_hash", { length: 66 }).notNull(),
     contractWithdrawal: t.json("contract_withdrawal").notNull(),
     singleWithdrawalProof: bytea("single_withdrawal_proof"),
+    l1TxHash: t.varchar("l1_tx_hash", { length: 66 }),
     createdAt: t.timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [

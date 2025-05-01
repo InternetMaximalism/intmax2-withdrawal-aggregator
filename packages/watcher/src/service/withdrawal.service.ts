@@ -67,24 +67,36 @@ const batchUpdateWithdrawalStatus = (
       `Batch update withdrawal status: ${nextStatus} for ${withdrawalEventLogs.length} ${type} withdrawals`,
     );
 
-    const data = {
-      status: nextStatus,
-      ...((type === "DirectWithdrawalSuccessed" || type === "WithdrawalClaimable") && {
-        singleWithdrawalProof: null,
-      }),
-    };
+    const withdrawalsByTxHash = withdrawalEventLogs.reduce(
+      (acc, log) => {
+        const { transactionHash } = log;
+        if (!acc[transactionHash]) {
+          acc[transactionHash] = [];
+        }
+        acc[transactionHash].push(log.withdrawalHash);
+        return acc;
+      },
+      {} as Record<string, string[]>,
+    );
 
-    await tx
-      .update(withdrawalSchema)
-      .set(data)
-      .where(
-        and(
-          inArray(
-            withdrawalSchema.withdrawalHash,
-            withdrawalEventLogs.map(({ withdrawalHash }) => withdrawalHash),
+    for (const [transactionHash, withdrawalHashes] of Object.entries(withdrawalsByTxHash)) {
+      const data = {
+        status: nextStatus,
+        l1TxHash: transactionHash,
+        ...((type === "DirectWithdrawalSuccessed" || type === "WithdrawalClaimable") && {
+          singleWithdrawalProof: null,
+        }),
+      };
+
+      await tx
+        .update(withdrawalSchema)
+        .set(data)
+        .where(
+          and(
+            inArray(withdrawalSchema.withdrawalHash, withdrawalHashes),
+            eq(withdrawalSchema.status, previousStatus),
           ),
-          eq(withdrawalSchema.status, previousStatus),
-        ),
-      );
+        );
+    }
   };
 };

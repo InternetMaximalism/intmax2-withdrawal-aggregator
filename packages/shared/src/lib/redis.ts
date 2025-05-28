@@ -63,8 +63,15 @@ export class RedisClient {
 
   public async quit() {
     if (this.client) {
-      await this.client.quit();
-      this.client = null;
+      try {
+        await this.client.quit();
+        logger.debug("Redis client quit successfully");
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        logger.error(`Error during Redis quit: ${errorMessage}`);
+      } finally {
+        this.client = null;
+      }
     }
   }
 }

@@ -36,7 +36,7 @@ export class QueueManager {
     });
 
     this.queue.on("error", (error) => {
-      logger.error(`Queue error: ${error}`);
+      logger.error(`Queue error: ${error.message}`);
     });
 
     this.queue.on("completed", (job: Job, result: any) => {
@@ -70,9 +70,8 @@ export class QueueManager {
       try {
         return await processor(job);
       } catch (error) {
-        logger.error(
-          `Error processing job ${job.id}: ${error instanceof Error ? error.message : "Unknown error"}`,
-        );
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        logger.error(`Error processing job ${job.id}: ${errorMessage}`);
         throw error;
       }
     });

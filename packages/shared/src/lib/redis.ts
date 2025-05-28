@@ -26,11 +26,11 @@ export class RedisClient {
     });
 
     this.client.on("connect", () => {
-      logger.info(`Redis Client Connected`);
+      logger.debug(`Redis Client Connected`);
     });
 
     this.client.on("ready", () => {
-      logger.info("Redis client ready for commands");
+      logger.debug("Redis client ready for commands");
     });
 
     this.client.on("error", (error) => {
@@ -38,15 +38,15 @@ export class RedisClient {
     });
 
     this.client.on("close", () => {
-      logger.warn("Redis client connection closed");
+      logger.debug("Redis client connection closed");
     });
 
     this.client.on("reconnecting", (time: number) => {
-      logger.info(`Redis client reconnecting in ${time}ms`);
+      logger.debug(`Redis client reconnecting in ${time}ms`);
     });
 
     this.client.on("end", () => {
-      logger.info("Redis client connection ended");
+      logger.debug("Redis client connection ended");
     });
   }
 

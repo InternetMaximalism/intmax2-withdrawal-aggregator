@@ -1,6 +1,26 @@
 {
   "name": "intmax2-withdrawal-aggregator",
   "version": "0.1.10",
+  "license": "MIT",
+  "description": "Withdrawal Aggregator for INTMAX2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/InternetMaximalism/intmax2-withdrawal-aggregator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/InternetMaximalism/intmax2-withdrawal-aggregator/issues"
+  },
+  "homepage": "https://github.com/InternetMaximalism/intmax2-withdrawal-aggregator#readme",
+  "keywords": [
+    "intmax2",
+    "blockchain",
+    "explorer",
+    "api"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "yarn": ">=4.0.0"
+  },
   "workspaces": [
     "packages/*"
   ],
@@ -22,5 +42,9 @@
     "drizzle-kit": "^0.31.1",
     "typescript": "^5.8.3"
   },
-  "packageManager": "yarn@4.9.1"
+  "packageManager": "yarn@4.9.1",
+  "volta": {
+    "node": "24.0.2",
+    "yarn": "4.9.1"
+  }
 }

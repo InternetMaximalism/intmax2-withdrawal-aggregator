@@ -12,7 +12,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@adraffy/ens-normalize@npm:^1.10.1":
+"@adraffy/ens-normalize@npm:^1.11.0":
   version: 1.11.0
   resolution: "@adraffy/ens-normalize@npm:1.11.0"
   checksum: 10c0/5111d0f1a273468cb5661ed3cf46ee58de8f32f84e2ebc2365652e66c1ead82649df94c736804e2b9cfa831d30ef24e1cc3575d970dbda583416d3a98d8870a6
@@ -709,7 +709,7 @@ __metadata:
     pino: "npm:^9.7.0"
     pino-pretty: "npm:^13.0.0"
     typescript: "npm:^5.8.3"
-    viem: "npm:^2.30.1"
+    viem: "npm:^2.31.2"
     vitest: "npm:^3.1.4"
   languageName: unknown
   linkType: soft
@@ -851,7 +851,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/curves@npm:1.9.1, @noble/curves@npm:^1.6.0, @noble/curves@npm:~1.9.0":
+"@noble/curves@npm:1.9.2, @noble/curves@npm:^1.9.1":
+  version: 1.9.2
+  resolution: "@noble/curves@npm:1.9.2"
+  dependencies:
+    "@noble/hashes": "npm:1.8.0"
+  checksum: 10c0/21d049ae4558beedbf5da0004407b72db84360fa29d64822d82dc9e80251e1ecb46023590cc4b20e70eed697d1b87279b4911dc39f8694c51c874289cfc8e9a7
+  languageName: node
+  linkType: hard
+
+"@noble/curves@npm:~1.9.0":
   version: 1.9.1
   resolution: "@noble/curves@npm:1.9.1"
   dependencies:
@@ -867,7 +876,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/hashes@npm:1.8.0, @noble/hashes@npm:^1.5.0, @noble/hashes@npm:~1.8.0":
+"@noble/hashes@npm:1.8.0, @noble/hashes@npm:^1.8.0, @noble/hashes@npm:~1.8.0":
   version: 1.8.0
   resolution: "@noble/hashes@npm:1.8.0"
   checksum: 10c0/06a0b52c81a6fa7f04d67762e08b2c476a00285858150caeaaff4037356dd5e119f45b2a530f638b77a5eeca013168ec1b655db41bae3236cb2e9d511484fc77
@@ -1050,7 +1059,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scure/bip32@npm:1.7.0, @scure/bip32@npm:^1.5.0":
+"@scure/bip32@npm:1.7.0, @scure/bip32@npm:^1.7.0":
   version: 1.7.0
   resolution: "@scure/bip32@npm:1.7.0"
   dependencies:
@@ -1061,7 +1070,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scure/bip39@npm:1.6.0, @scure/bip39@npm:^1.4.0":
+"@scure/bip39@npm:1.6.0, @scure/bip39@npm:^1.6.0":
   version: 1.6.0
   resolution: "@scure/bip39@npm:1.6.0"
   dependencies:
@@ -1230,7 +1239,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"abitype@npm:1.0.8, abitype@npm:^1.0.6, abitype@npm:^1.0.8":
+"abitype@npm:1.0.8, abitype@npm:^1.0.8":
   version: 1.0.8
   resolution: "abitype@npm:1.0.8"
   peerDependencies:
@@ -2849,24 +2858,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ox@npm:0.7.1":
-  version: 0.7.1
-  resolution: "ox@npm:0.7.1"
+"ox@npm:0.8.1":
+  version: 0.8.1
+  resolution: "ox@npm:0.8.1"
   dependencies:
-    "@adraffy/ens-normalize": "npm:^1.10.1"
+    "@adraffy/ens-normalize": "npm:^1.11.0"
     "@noble/ciphers": "npm:^1.3.0"
-    "@noble/curves": "npm:^1.6.0"
-    "@noble/hashes": "npm:^1.5.0"
-    "@scure/bip32": "npm:^1.5.0"
-    "@scure/bip39": "npm:^1.4.0"
-    abitype: "npm:^1.0.6"
+    "@noble/curves": "npm:^1.9.1"
+    "@noble/hashes": "npm:^1.8.0"
+    "@scure/bip32": "npm:^1.7.0"
+    "@scure/bip39": "npm:^1.6.0"
+    abitype: "npm:^1.0.8"
     eventemitter3: "npm:5.0.1"
   peerDependencies:
     typescript: ">=5.4.0"
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/15370d76f7e5fe1b06c5b9986bc709a8c433e4242660900b3d1adb2a56c8f762a2010a9166bdb95bdf531806cde7891911456c7ec8ba135fc232a5d5037ac673
+  checksum: 10c0/3d04df384a35c94b21a29d867ee3735acf9a975d46ffb0a26cc438b92f1e4952b2b3cddb74b4213e88d2988e82687db9b85c1018c5d4b24737b1c3d7cb7c809e
   languageName: node
   linkType: hard
 
@@ -3194,7 +3203,7 @@ __metadata:
     ethers: "npm:6.14.3"
     tsx: "npm:^4.19.4"
     typescript: "npm:^5.8.3"
-    viem: "npm:^2.30.1"
+    viem: "npm:^2.31.2"
     vitest: "npm:^3.1.4"
   languageName: unknown
   linkType: soft
@@ -3736,24 +3745,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^2.30.1":
-  version: 2.30.1
-  resolution: "viem@npm:2.30.1"
+"viem@npm:^2.31.2":
+  version: 2.31.2
+  resolution: "viem@npm:2.31.2"
   dependencies:
-    "@noble/curves": "npm:1.9.1"
+    "@noble/curves": "npm:1.9.2"
     "@noble/hashes": "npm:1.8.0"
     "@scure/bip32": "npm:1.7.0"
     "@scure/bip39": "npm:1.6.0"
     abitype: "npm:1.0.8"
     isows: "npm:1.0.7"
-    ox: "npm:0.7.1"
+    ox: "npm:0.8.1"
     ws: "npm:8.18.2"
   peerDependencies:
     typescript: ">=5.0.4"
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/8fddf593294d8a0c484fad258602551b8f6fd81b79e26ac17763a68302ec55d43e21a2dd5da99e8d11fc176feb1c2b52ec252003b30a48ebc9dbbdce8806783c
+  checksum: 10c0/02a0df1f9d3f789ac8b3e95cb717ca16eb81e62493f6fc5e5d7c0fe8d68f6a7889d3f8295deca96d5daa570317ece9716b4a717f9cf2c36629b6662fd03591cd
   languageName: node
   linkType: hard
 
@@ -3890,7 +3899,7 @@ __metadata:
     drizzle-orm: "npm:^0.43.1"
     tsx: "npm:^4.19.4"
     typescript: "npm:^5.8.3"
-    viem: "npm:^2.30.1"
+    viem: "npm:^2.31.2"
     vitest: "npm:^3.1.4"
   languageName: unknown
   linkType: soft

@@ -38,6 +38,7 @@ export class WithdrawalManager {
     pipeline.set(key, JSON.stringify(group));
     pipeline.expire(key, this.expiration);
     pipeline.zadd(this.groupSetKey, timestamp, id);
+    pipeline.expire(this.groupSetKey, this.expiration);
 
     await pipeline.exec();
 

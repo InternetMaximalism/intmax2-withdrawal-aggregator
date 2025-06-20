@@ -29,6 +29,7 @@ export class WithdrawalManager {
     return data ? JSON.parse(data) : null;
   }
 
+  // TODO: cleanup
   async addGroup(group: WithdrawalGroup): Promise<string> {
     const id = crypto.randomUUID();
     const key = this.getKey(id);
@@ -38,7 +39,6 @@ export class WithdrawalManager {
     pipeline.set(key, JSON.stringify(group));
     pipeline.expire(key, this.expiration);
     pipeline.zadd(this.groupSetKey, timestamp, id);
-    pipeline.expire(this.groupSetKey, this.expiration);
 
     await pipeline.exec();
 

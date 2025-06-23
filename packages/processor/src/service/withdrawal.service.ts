@@ -29,6 +29,10 @@ export const processWithdrawalGroup = async (requestingWithdrawals: RequestingWi
 const fetchWithdrawalsWithProofs = async (requestingWithdrawals: RequestingWithdrawal[]) => {
   const requestingWithdrawalUUIDs = requestingWithdrawals.map((withdrawal) => withdrawal.uuid);
 
+  if (requestingWithdrawalUUIDs.length === 0) {
+    throw new Error("No requesting withdrawals provided");
+  }
+
   const withdrawals = await withdrawalDB
     .select({
       uuid: withdrawalSchema.uuid,

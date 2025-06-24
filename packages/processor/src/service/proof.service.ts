@@ -13,28 +13,34 @@ export const generateWithdrawalProofs = async (withdrawals: WithdrawalWithProof[
   const withdrawalProofs: WithdrawalProof[] = [];
 
   for (const [index, withdrawal] of withdrawals.entries()) {
-    const { uuid, singleWithdrawalProof } = withdrawal;
+    const { withdrawalHash, singleWithdrawalProof } = withdrawal;
     if (!singleWithdrawalProof) {
-      throw new Error(`Missing single withdrawal proof for withdrawal ${uuid}`);
+      throw new Error(`Missing single withdrawal proof for withdrawal ${withdrawalHash}`);
     }
 
-    logger.info(`Generating proof for withdrawal ${index + 1}/${withdrawals.length}`, { uuid });
+    logger.info(`Generating proof for withdrawal ${index + 1}/${withdrawals.length}`, {
+      withdrawalHash,
+    });
 
     try {
       const prevWithdrawalProof = index > 0 ? withdrawalProofs[index - 1].proof : null;
-      await createWithdrawalProof(uuid, bytesToBase64(singleWithdrawalProof), prevWithdrawalProof);
+      await createWithdrawalProof(
+        withdrawalHash,
+        bytesToBase64(singleWithdrawalProof),
+        prevWithdrawalProof,
+      );
 
-      const result = await pollWithdrawalProof(uuid);
+      const result = await pollWithdrawalProof(withdrawalHash);
       if (!result.proof) {
-        throw new Error(`Failed to generate proof for withdrawal ${uuid}`);
+        throw new Error(`Failed to generate proof for withdrawal ${withdrawalHash}`);
       }
 
-      logger.debug(`Successfully generated proof for withdrawal ${uuid}`);
+      logger.debug(`Successfully generated proof for withdrawal ${withdrawalHash}`);
 
       withdrawalProofs.push(result.proof);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      logger.error(`Failed to generate proof for withdrawal ${uuid} - ${message}`);
+      logger.error(`Failed to generate proof for withdrawal ${withdrawalHash} - ${message}`);
       throw error;
     }
   }

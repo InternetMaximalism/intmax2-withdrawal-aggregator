@@ -12,22 +12,22 @@ import { MAX_PG_SQL_PARAMS, MAX_RESULTS_LIMIT, QUERY_BATCH_SIZE } from "../const
 import type { WithdrawalResult } from "../types";
 
 export const fetchRequestingWithdrawals = async () => {
-  const processedUUIDs = await WithdrawalManager.getInstance().getAllProcessedUUIDs();
+  const processedKeys = await WithdrawalManager.getInstance().getAllProcessedHashes();
 
-  if (processedUUIDs.length > MAX_PG_SQL_PARAMS) {
-    return await fetchRequestingWithdrawalsBatch(processedUUIDs);
+  if (processedKeys.length > MAX_PG_SQL_PARAMS) {
+    return await fetchRequestingWithdrawalsBatch(processedKeys);
   }
 
   const requestingWithdrawals = await withdrawalDB
     .select({
-      uuid: withdrawalSchema.uuid,
+      withdrawalHash: withdrawalSchema.withdrawalHash,
       createdAt: withdrawalSchema.createdAt,
     })
     .from(withdrawalSchema)
     .where(
       and(
         eq(withdrawalSchema.status, "requested"),
-        notInArray(withdrawalSchema.uuid, processedUUIDs),
+        notInArray(withdrawalSchema.withdrawalHash, processedKeys),
       ),
     )
     .orderBy(asc(withdrawalSchema.createdAt));
@@ -36,8 +36,8 @@ export const fetchRequestingWithdrawals = async () => {
 };
 
 // NOTE: better performance
-export const fetchRequestingWithdrawalsBatch = async (processedUUIDs: string[]) => {
-  const processedUUIDSet = new Set(processedUUIDs);
+export const fetchRequestingWithdrawalsBatch = async (processedKeys: string[]) => {
+  const processedKeySet = new Set(processedKeys);
   const results: WithdrawalResult[] = [];
   let offset = 0;
   let totalFetched = 0;
@@ -45,7 +45,7 @@ export const fetchRequestingWithdrawalsBatch = async (processedUUIDs: string[]) 
   while (results.length < MAX_RESULTS_LIMIT) {
     const batch = await withdrawalDB
       .select({
-        uuid: withdrawalSchema.uuid,
+        withdrawalHash: withdrawalSchema.withdrawalHash,
         createdAt: withdrawalSchema.createdAt,
       })
       .from(withdrawalSchema)
@@ -60,7 +60,7 @@ export const fetchRequestingWithdrawalsBatch = async (processedUUIDs: string[]) 
 
     totalFetched += batch.length;
 
-    const filtered = batch.filter((claim) => !processedUUIDSet.has(claim.uuid));
+    const filtered = batch.filter((claim) => !processedKeySet.has(claim.withdrawalHash));
 
     const remainingSlots = MAX_RESULTS_LIMIT - results.length;
     const toAdd = filtered.slice(0, remainingSlots);
@@ -90,7 +90,7 @@ export const createWithdrawalGroup = async (group: RequestingWithdrawal[]) => {
 
   const groupId = await WithdrawalManager.getInstance().addGroup({
     requestingWithdrawals: group.map((withdrawal) => ({
-      uuid: withdrawal.uuid,
+      withdrawalHash: withdrawal.withdrawalHash,
     })),
     status: WithdrawalGroupStatus.PENDING,
     createdAt: now,

@@ -80,8 +80,10 @@ export class WithdrawalManager {
     return groups.filter((group): group is WithdrawalGroup => group !== null);
   }
 
-  async getAllProcessedUUIDs(): Promise<string[]> {
+  async getAllProcessedHashes(): Promise<string[]> {
     const groups = await this.getAllGroups();
-    return groups.flatMap((group) => group.requestingWithdrawals.map(({ uuid }) => uuid));
+    return groups.flatMap((group) =>
+      group.requestingWithdrawals.map(({ withdrawalHash }) => withdrawalHash),
+    );
   }
 }

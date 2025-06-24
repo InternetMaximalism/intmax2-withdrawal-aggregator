@@ -41,7 +41,6 @@ export interface SubmitContractWithdrawal {
 }
 
 export interface WithdrawalWithProof {
-  uuid: string;
   singleWithdrawalProof: Uint8Array | null;
   withdrawalHash: string;
 }

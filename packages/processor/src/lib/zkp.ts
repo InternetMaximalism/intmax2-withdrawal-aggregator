@@ -10,7 +10,7 @@ import type {
 } from "../types";
 
 export const createWithdrawalProof = async (
-  id: string,
+  withdrawalHash: string,
   singleWithdrawalProof: string,
   prevWithdrawalProof: string | null,
 ) => {
@@ -18,7 +18,7 @@ export const createWithdrawalProof = async (
     method: "post",
     path: "aggregator-prover/proof/withdrawal",
     data: {
-      id,
+      id: withdrawalHash,
       singleWithdrawalProof,
       prevWithdrawalProof,
     },
@@ -26,7 +26,7 @@ export const createWithdrawalProof = async (
 };
 
 export const createWrappedProof = async (
-  id: string,
+  withdrawalHash: string,
   withdrawalAggregatorAddress: string,
   withdrawalProof: string,
 ) => {
@@ -34,7 +34,7 @@ export const createWrappedProof = async (
     method: "post",
     path: "aggregator-prover/proof/wrapper/withdrawal",
     data: {
-      id,
+      id: withdrawalHash,
       withdrawalAggregator: withdrawalAggregatorAddress,
       withdrawalProof,
     },

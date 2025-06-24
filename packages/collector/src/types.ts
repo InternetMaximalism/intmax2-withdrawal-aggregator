@@ -1,4 +1,4 @@
 export type WithdrawalResult = {
-  uuid: string;
+  withdrawalHash: string;
   createdAt: Date;
 };

@@ -27,29 +27,30 @@ export const processWithdrawalGroup = async (requestingWithdrawals: RequestingWi
 };
 
 const fetchWithdrawalsWithProofs = async (requestingWithdrawals: RequestingWithdrawal[]) => {
-  const requestingWithdrawalUUIDs = requestingWithdrawals.map((withdrawal) => withdrawal.uuid);
+  const requestingWithdrawalKeys = requestingWithdrawals.map(
+    (withdrawal) => withdrawal.withdrawalHash,
+  );
 
-  if (requestingWithdrawalUUIDs.length === 0) {
+  if (requestingWithdrawalKeys.length === 0) {
     throw new Error("No requesting withdrawals provided");
   }
 
   const withdrawals = await withdrawalDB
     .select({
-      uuid: withdrawalSchema.uuid,
       singleWithdrawalProof: withdrawalSchema.singleWithdrawalProof,
       withdrawalHash: withdrawalSchema.withdrawalHash,
     })
     .from(withdrawalSchema)
     .where(
       and(
-        inArray(withdrawalSchema.uuid, requestingWithdrawalUUIDs),
+        inArray(withdrawalSchema.withdrawalHash, requestingWithdrawalKeys),
         eq(withdrawalSchema.status, "requested"),
       ),
     );
 
-  if (withdrawals.length !== requestingWithdrawalUUIDs.length) {
+  if (withdrawals.length !== requestingWithdrawalKeys.length) {
     logger.warn(
-      `Some requested withdrawals were not found or not in REQUESTED status requested: ${requestingWithdrawalUUIDs.length} found: ${withdrawals.length}`,
+      `Some requested withdrawals were not found or not in REQUESTED status requested: ${requestingWithdrawalKeys.length} found: ${withdrawals.length}`,
     );
   }
 

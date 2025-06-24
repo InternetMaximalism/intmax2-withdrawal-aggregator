@@ -39,8 +39,8 @@ const performJob = async (data: QueueJobData): Promise<void> => {
       })
       .where(
         inArray(
-          withdrawalSchema.uuid,
-          group.requestingWithdrawals.map((withdrawal) => withdrawal.uuid),
+          withdrawalSchema.withdrawalHash,
+          group.requestingWithdrawals.map((withdrawal) => withdrawal.withdrawalHash),
         ),
       );
   } catch (error) {
@@ -59,8 +59,8 @@ const performJob = async (data: QueueJobData): Promise<void> => {
         })
         .where(
           inArray(
-            withdrawalSchema.uuid,
-            group!.requestingWithdrawals.map((withdrawal) => withdrawal.uuid),
+            withdrawalSchema.withdrawalHash,
+            group!.requestingWithdrawals.map((withdrawal) => withdrawal.withdrawalHash),
           ),
         );
     }

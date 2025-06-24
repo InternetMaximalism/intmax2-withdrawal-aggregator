@@ -11,5 +11,5 @@ export interface WithdrawalGroup {
 }
 
 export interface RequestingWithdrawal {
-  uuid: string;
+  withdrawalHash: string;
 }

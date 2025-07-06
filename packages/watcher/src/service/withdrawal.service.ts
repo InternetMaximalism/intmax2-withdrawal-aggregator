@@ -1,7 +1,7 @@
 import {
+  logger,
   type WithdrawalEventLog,
   WithdrawalStatus,
-  logger,
   withdrawalDB,
   withdrawalSchema,
 } from "@intmax2-withdrawal-aggregator/shared";

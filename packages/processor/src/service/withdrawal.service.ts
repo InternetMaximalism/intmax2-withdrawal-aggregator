@@ -1,7 +1,7 @@
 import {
-  type RequestingWithdrawal,
   getWalletClient,
   logger,
+  type RequestingWithdrawal,
   withdrawalDB,
   withdrawalSchema,
 } from "@intmax2-withdrawal-aggregator/shared";

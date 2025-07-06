@@ -1,9 +1,9 @@
 import {
+  logger,
   QueueManager,
   type RequestingWithdrawal,
   WithdrawalGroupStatus,
   WithdrawalManager,
-  logger,
   withdrawalDB,
   withdrawalSchema,
 } from "@intmax2-withdrawal-aggregator/shared";

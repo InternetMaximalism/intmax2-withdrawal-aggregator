@@ -2,7 +2,7 @@
   "name": "intmax2-withdrawal-aggregator",
   "version": "1.0.2",
   "license": "MIT",
-  "description": "Withdrawal Aggregator for INTMAX2",
+  "description": "Withdrawal Aggregator for INTMAX2 blockchain",
   "repository": {
     "type": "git",
     "url": "https://github.com/InternetMaximalism/intmax2-withdrawal-aggregator.git"
@@ -15,10 +15,13 @@
     "intmax2",
     "blockchain",
     "explorer",
-    "api"
+    "api",
+    "web3",
+    "ethereum",
+    "layer2"
   ],
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=20.0.0",
     "yarn": ">=4.0.0"
   },
   "workspaces": [

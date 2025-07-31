@@ -8,3 +8,6 @@ export const LIQUIDITY_CONTRACT_ADDRESS = config.LIQUIDITY_CONTRACT_ADDRESS as `
 export const LIQUIDITY_CONTRACT_DEPLOYED_BLOCK_NUMBER = BigInt(
   config.LIQUIDITY_CONTRACT_DEPLOYED_BLOCK_NUMBER,
 ) as bigint;
+
+// blockchain
+export const PRECISION = 10n;

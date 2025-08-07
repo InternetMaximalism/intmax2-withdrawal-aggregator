@@ -2,21 +2,26 @@
 
 The withdrawal aggregator is responsible for consolidating withdrawals and managing requests to the ZKP (Zero-Knowledge Proof).
 
-## Development
+## Setup
+
+Before running any service, make sure to:
 
 ```sh
-# install
+# Install dependencies
 yarn
 
-# env
+# Copy environment variables
 cp .env.example .env
 
-# generate
-yarn generate
-
-# shared build
+# Build shared packages
 yarn build:shared
+```
 
+## Development
+
+Start the processor or job service in development mode:
+
+```sh
 # collector
 yarn workspace collector dev
 
@@ -65,3 +70,10 @@ docker compose down -v
 docker build -f docker/Dockerfile -t intmax2-withdrawal-aggregator .
 docker run --rm -p 3000:3000 --env-file .env intmax2-withdrawal-aggregator workspace collector start
 ```
+
+## Docs
+
+See the documentation for details on available endpoints and how to use the API.  
+This guide will help you integrate INTMAX2 blockchain data into your applications.
+
+- [SYSTEM Design](./docs/SYSTEM_DESIGN.md)

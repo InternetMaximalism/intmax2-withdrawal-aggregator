@@ -73,6 +73,6 @@ docker run --rm -p 3000:3000 --env-file .env intmax2-withdrawal-aggregator works
 
 ## Docs
 
-This document explains the overall system design of INTMAX2. It covers the architectural components, interactions between modules, data flow, and the process of generating and verifying ZKPs (Zero-Knowledge Proofs). It is intended to help developers and infrastructure engineers understand the technical foundation of the system.
+This document explains the overall system design of withdrawal-aggregator. It covers the architectural components, interactions between modules, data flow, and the process of generating and verifying ZKPs (Zero-Knowledge Proofs). It is intended to help developers and infrastructure engineers understand the technical foundation of the system.
 
 - [SYSTEM Design](./docs/SYSTEM_DESIGN.md)

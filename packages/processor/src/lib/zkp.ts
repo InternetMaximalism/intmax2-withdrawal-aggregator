@@ -8,6 +8,7 @@ import type {
   ProverRequestParams,
   WithdrawalProof,
 } from "../types";
+import { getVerifierData } from "./verifierData";
 
 export const createWithdrawalProof = async (
   withdrawalHash: string,
@@ -42,11 +43,14 @@ export const createWrappedProof = async (
 };
 
 export const createGnarkProof = async (wrappedProof: string) => {
+  const verifierData = getVerifierData("withdrawal", "dev");
+
   return makeProverRequest<CreateGnarkProofResponse>({
     method: "post",
     path: "withdrawal-gnark-server/start-proof",
     data: {
       proof: wrappedProof,
+      verifierData,
     },
   });
 };

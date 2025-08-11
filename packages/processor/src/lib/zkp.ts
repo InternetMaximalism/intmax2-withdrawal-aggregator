@@ -8,7 +8,7 @@ import type {
   ProverRequestParams,
   WithdrawalProof,
 } from "../types";
-import { getVerifierData } from "./verifierData";
+import { type GnarkVerifierDataType, getVerifierData } from "./verifierData";
 
 export const createWithdrawalProof = async (
   withdrawalHash: string,
@@ -43,7 +43,7 @@ export const createWrappedProof = async (
 };
 
 export const createGnarkProof = async (wrappedProof: string) => {
-  const verifierData = getVerifierData("withdrawal", "dev");
+  const verifierData = getVerifierData(config.GNARK_VERIFIER_DATA_TYPE as GnarkVerifierDataType);
 
   return makeProverRequest<CreateGnarkProofResponse>({
     method: "post",

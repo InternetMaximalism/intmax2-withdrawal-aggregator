@@ -51,6 +51,17 @@ export const config = cleanEnv(process.env, {
     default: "http://localhost:3001",
     desc: "The URL of the ZKP prover API",
   }),
+  GNARK_VERIFIER_DATA_TYPE: str({
+    default: "ProofType",
+    choices: [
+      "withdrawal-dev",
+      "withdrawal-stage",
+      "withdrawal-prod",
+      "claim-dev",
+      "claim-stage",
+      "claim-prod",
+    ],
+  }),
   // queue
   QUEUE_CONCURRENCY: num({
     default: 2,

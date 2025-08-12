@@ -50,7 +50,7 @@ export const createGnarkProof = async (wrappedProof: string) => {
     path: "withdrawal-gnark-server/start-proof",
     data: {
       proof: wrappedProof,
-      verifierData,
+      verifierData: JSON.stringify(verifierData),
     },
   });
 };

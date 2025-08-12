@@ -1,4 +1,4 @@
-import { config, logger } from "@intmax2-withdrawal-aggregator/shared";
+import { config } from "@intmax2-withdrawal-aggregator/shared";
 import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
 import type {
   CreateGnarkProofResponse,
@@ -44,7 +44,6 @@ export const createWrappedProof = async (
 
 export const createGnarkProof = async (wrappedProof: string) => {
   const verifierData = getVerifierData(config.GNARK_VERIFIER_DATA_TYPE as GnarkVerifierDataType);
-  logger.info(`verifierData: ${JSON.stringify(verifierData)}`);
 
   return makeProverRequest<CreateGnarkProofResponse>({
     method: "post",

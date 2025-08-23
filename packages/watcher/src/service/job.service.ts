@@ -5,15 +5,15 @@ import { handleAllWithdrawalEvents } from "./event.service";
 import { batchUpdateWithdrawalStatusTransactions } from "./withdrawal.service";
 
 export const performJob = async (): Promise<void> => {
-  const ethereumClient = createNetworkClient("ethereum");
+  const l1Client = createNetworkClient("l1");
 
   const [events, currentBlockNumber] = await Promise.all([
     eventDB.select().from(eventSchema).where(inArray(eventSchema.name, WITHDRAWAL_EVENT_NAMES)),
-    ethereumClient.getBlockNumber(),
+    l1Client.getBlockNumber(),
   ]);
 
   const { directWithdrawals, claimableWithdrawals, claimedWithdrawals } =
-    await handleAllWithdrawalEvents(ethereumClient, currentBlockNumber, events);
+    await handleAllWithdrawalEvents(l1Client, currentBlockNumber, events);
 
   await batchUpdateWithdrawalStatusTransactions(
     directWithdrawals,

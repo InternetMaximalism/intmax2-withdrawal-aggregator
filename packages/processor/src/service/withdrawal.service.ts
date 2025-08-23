@@ -16,7 +16,7 @@ import {
 import { submitWithdrawalProof } from "./submit.service";
 
 export const processWithdrawalGroup = async (requestingWithdrawals: RequestingWithdrawal[]) => {
-  const walletClientData = getWalletClient("withdrawal", "scroll");
+  const walletClientData = getWalletClient("withdrawal", "l2");
 
   const withdrawals = await fetchWithdrawalsWithProofs(requestingWithdrawals);
   const withdrawalProofs = await generateWithdrawalProofs(withdrawals);

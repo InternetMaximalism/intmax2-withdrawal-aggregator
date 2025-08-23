@@ -101,13 +101,13 @@ export const replacedEthersTransaction = async ({
 };
 
 export const ethersWaitForTransactionConfirmation = async (
-  ethereumClient: PublicClient,
+  publicClient: PublicClient,
   transactionHash: string,
   functionName: string,
   options?: WaitForTransactionOptions,
 ) => {
   try {
-    const provider = new ethers.JsonRpcProvider(ethereumClient.transport.url);
+    const provider = new ethers.JsonRpcProvider(publicClient.transport.url);
     const { confirms, timeout } = options ?? DEFAULT_OPTIONS;
     const receipt = await provider.waitForTransaction(transactionHash, confirms, timeout);
 

@@ -18,9 +18,9 @@ export const generateWithdrawalProofs = async (withdrawals: WithdrawalWithProof[
       throw new Error(`Missing single withdrawal proof for withdrawal ${withdrawalHash}`);
     }
 
-    logger.info(`Generating proof for withdrawal ${index + 1}/${withdrawals.length}`, {
-      withdrawalHash,
-    });
+    logger.info(
+      `Generating proof for withdrawal ${index + 1}/${withdrawals.length}: ${withdrawalHash}`,
+    );
 
     try {
       const prevWithdrawalProof = index > 0 ? withdrawalProofs[index - 1].proof : null;
@@ -60,7 +60,7 @@ export const generateWrappedProof = async (
   const wrapperId = getRandomString(DEFAULT_ID_LENGTH);
 
   try {
-    logger.info("Generating wrapped proof", { wrapperId });
+    logger.info(`Generating wrapped proof: ${wrapperId}`);
 
     await createWrappedProof(wrapperId, walletClientData.account.address, lastWithdrawalProof);
 

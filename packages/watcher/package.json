@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "dependencies": {
     "@intmax2-withdrawal-aggregator/shared": "workspace:*",
-    "abitype": "^1.0.8",
+    "abitype": "^1.0.9",
     "drizzle-orm": "^0.44.4",
-    "viem": "^2.33.3"
+    "viem": "^2.34.0"
   },
   "scripts": {
     "start": "node dist/index.js",

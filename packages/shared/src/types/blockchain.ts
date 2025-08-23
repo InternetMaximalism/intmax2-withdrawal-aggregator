@@ -32,3 +32,5 @@ export interface ClaimedWithdrawalEvent extends BaseEvent {
 export interface ClaimedWithdrawalEventLog extends WithdrawalEventLog {
   recipient: string;
 }
+
+export type NetworkLayer = "l1" | "l2";

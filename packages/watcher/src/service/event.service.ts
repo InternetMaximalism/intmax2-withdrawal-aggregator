@@ -19,7 +19,7 @@ import type { WithdrawalEventType } from "../types";
 const handleWithdrawalEvent = async <
   T extends { args: { withdrawalHash: string }; transactionHash: string },
 >(
-  ethereumClient: PublicClient,
+  l1Client: PublicClient,
   params: {
     startBlockNumber: bigint;
     endBlockNumber: bigint;
@@ -31,7 +31,7 @@ const handleWithdrawalEvent = async <
 
   validateBlockRange(eventName, startBlockNumber, endBlockNumber);
 
-  const events = await fetchEvents<T>(ethereumClient, {
+  const events = await fetchEvents<T>(l1Client, {
     startBlockNumber,
     endBlockNumber,
     blockRange: BLOCK_RANGE_MINIMUM,
@@ -46,24 +46,24 @@ const handleWithdrawalEvent = async <
 };
 
 export const handleAllWithdrawalEvents = async (
-  ethereumClient: PublicClient,
+  l1Client: PublicClient,
   currentBlockNumber: bigint,
   events: (typeof eventSchema.$inferSelect)[],
 ) => {
   const [directWithdrawals, claimableWithdrawals, claimedWithdrawals] = await Promise.all([
-    handleWithdrawalEvent<DirectWithdrawalSuccessedEvent>(ethereumClient, {
+    handleWithdrawalEvent<DirectWithdrawalSuccessedEvent>(l1Client, {
       startBlockNumber: getLastProcessedBlockNumberByEventName(events, "DirectWithdrawalSuccessed"),
       endBlockNumber: currentBlockNumber,
       eventInterface: directWithdrawalSuccessedEvent,
       eventName: "DirectWithdrawalSuccessed",
     }),
-    handleWithdrawalEvent<WithdrawalClaimableEvent>(ethereumClient, {
+    handleWithdrawalEvent<WithdrawalClaimableEvent>(l1Client, {
       startBlockNumber: getLastProcessedBlockNumberByEventName(events, "WithdrawalClaimable"),
       endBlockNumber: currentBlockNumber,
       eventInterface: withdrawalClaimableEvent,
       eventName: "WithdrawalClaimable",
     }),
-    handleWithdrawalEvent<ClaimedWithdrawalEvent>(ethereumClient, {
+    handleWithdrawalEvent<ClaimedWithdrawalEvent>(l1Client, {
       startBlockNumber: getLastProcessedBlockNumberByEventName(events, "ClaimedWithdrawal"),
       endBlockNumber: currentBlockNumber,
       eventInterface: claimedWithdrawalEvent,

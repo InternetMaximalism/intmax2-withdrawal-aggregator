@@ -122,7 +122,7 @@ export const submitWithdrawalProofWithRetry = async (
     gasPrice,
   };
 
-  const provider = new ethers.JsonRpcProvider(l2Client.transport.url);
+  const provider = new ethers.JsonRpcProvider(l2Client.transport.transports[0].value.url);
   const signer = new ethers.Wallet(
     toHex(walletClientData.account.getHdKey().privateKey!),
     provider,

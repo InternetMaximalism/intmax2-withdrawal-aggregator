@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "dependencies": {
     "@intmax2-withdrawal-aggregator/shared": "workspace:*",
-    "axios": "^1.11.0",
-    "drizzle-orm": "^0.44.4",
+    "axios": "^1.12.2",
+    "drizzle-orm": "^0.44.5",
     "ethers": "6.15.0",
-    "viem": "^2.34.0"
+    "viem": "^2.37.8"
   },
   "scripts": {
     "start": "node dist/index.js",
@@ -16,7 +16,7 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "tsx": "^4.20.4",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   }
